@@ -1,10 +1,12 @@
 # !/bin/sh
+# ./doUpdate.sh ./data test-update https://data.ontario.ca/dataset/8ba078b2-ca9b-44c1-b5db-9674d85421f9/resource/04bede2c-5e30-4a05-b890-cd407043485e/download/assessment-centre-locations.csv versions/assessment_centre_locations_2020_08_20.csv "test update"
+repoFolder=$1
+branchName=$2
+dataFileURL=$3
+dataFile=$4
+commitMessage=$5
 
-branchName=$1
-dataFileURL=$2
-dataFile=$3
-commitMessage=$4
-
+cd $repoFolder
 git fetch origin
 git checkout -b $branchName
 echo "downloading updated data from \"$dataFileURL\""

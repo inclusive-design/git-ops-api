@@ -12,6 +12,8 @@ const config = require("./auto-update-config.json");
  * TODO:
  *  - finish shell scripts
  *  - determine what externalities need to be configurable for testing and put them in the config file, e.g. the target rep/branch for the PR
+ *  - test that config.repoFolder exists/contains a git repo, and if not, run the cloneRepo script
+ *  - figure out how to make the bash script send commits/PRs on behalf of a specific account
  */
 
 /*
@@ -138,6 +140,7 @@ function generateBranchName(date) {
 }
 
 /**
+ * FIXME: this method of checking doesn't work anymore, since we have restructured the data repository
  * Check whether a given version of the data is in the repository
  * @param {string} dataFileName the name of the file to look for
  * @returns true if the file name is already present in the versions folder, false if not
@@ -148,7 +151,6 @@ function dataFileIsInRepo(dataFileName) {
 };
 
 
-// TODO: test that config.repoFolder exists/contains a git repo, and if not, run the cloneRepo script
 // FIXME: all of this work should occur as a transaction, so that if an error happens e.g. while trying to push the file, the download from data.ontario.ca is undone
 async function main() {
     let { downloadURL, date } = await getDataSource(config);
@@ -162,7 +164,7 @@ async function main() {
             path.join("/versions/", dataFileName),
             config.commitMessage
         ], {
-            cwd: path.join(__dirname, config.repoFolder),
+            cwd: path.join(__dirname),
             env: Object.assign({}, process.env, {
                 PATH: process.env.PATH + ":/usr/local/bin"
             })
