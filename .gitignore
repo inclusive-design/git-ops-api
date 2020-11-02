@@ -2,7 +2,7 @@
 node_modules/
 
 # Logs
-scripts/logs.txt
+scripts/log.txt
 
 # Optional npm cache directory
 .npm
