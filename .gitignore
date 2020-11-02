@@ -1,0 +1,10 @@
+# Dependency directories
+node_modules/
+
+# Logs
+scripts/logs.txt
+
+# Optional npm cache directory
+.npm
+
+package-lock.json
