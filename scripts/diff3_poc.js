@@ -2,7 +2,7 @@
 const dataForge = require('data-forge');
 require('data-forge-fs'); // For readFile/writeFile.
 const fs = require('fs'); // For saving results to a .html to visualize.
-var daff = require('daff'); // Load diff algorithm dependencies.
+const daff = require('daff'); // Load diff algorithm dependencies.
 
 var request = require('request');
 request.get('http://www.whatever.com/my.csv', function (error, response, body) {

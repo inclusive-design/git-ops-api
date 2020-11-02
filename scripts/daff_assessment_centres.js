@@ -5,7 +5,7 @@ const fs = require('fs'); // For saving results to a .html to visualize
 const fk_detect = require('./fk_detect') // Import similarity function
 const inquirer = require('inquirer');
 const _ = require('lodash');
-var daff = require('daff'); // Load diff algorithm dependencies.
+const daff = require('daff'); // Load diff algorithm dependencies.
 
 
 // NOTE: Need to figure out how to read remote files with node.js
