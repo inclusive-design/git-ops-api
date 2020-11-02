@@ -8,3 +8,6 @@ scripts/log.txt
 .npm
 
 package-lock.json
+
+# Examples
+scripts/examples/
