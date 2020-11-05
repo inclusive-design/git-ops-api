@@ -10,4 +10,4 @@ scripts/log.txt
 package-lock.json
 
 # Examples
-scripts/examples/
+js/examples/
