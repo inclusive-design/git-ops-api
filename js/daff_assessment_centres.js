@@ -101,7 +101,7 @@ async function main() {
 		// Note: when data is changed to row format title row is excluded so it must be added manually.
 		const data1ColumnNames = data1.getColumnNames();
 		data1 = [data1ColumnNames].concat(data1.toRows());
-		
+
 		const data2ColumnNames = data2.getColumnNames();
 		data2 = [data2ColumnNames].concat(data2.toRows());
 
