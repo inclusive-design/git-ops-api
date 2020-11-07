@@ -1,8 +1,8 @@
 {
   "name": "data-update-github",
   "version": "0.1.0",
-  "description": "Automatically push data from the web into a backing github repository",
-  "main": "auto-update.js",
+  "description": "Automatically detect data changes from the web and issue a pull request to a backing github repository",
+  "main": "update.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,8 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "axios": "0.20.0",
-    "jsdom": "16.4.0"
+    "jsdom": "16.4.0",
+    "rimraf": "3.0.2",
+    "simple-git": "2.21.0"
   }
 }
