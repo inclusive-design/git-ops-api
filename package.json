@@ -1,0 +1,17 @@
+{
+	"name": "data-update-github",
+	"version": "0.1.0",
+	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
+	"scripts": {
+		"lint": "grunt lint"
+	},
+	"author": "Inclusive Design Research Centre",
+	"license": "BSD-3-Clause",
+	"dependencies": {
+		"fluid-grunt-lint-all": "2.0.0",
+		"eslint-config-fluid": "1.4.0"
+	},
+	"devDependencies": {
+		"grunt": "1.3.0"
+	}
+}
