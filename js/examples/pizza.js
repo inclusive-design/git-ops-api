@@ -12,8 +12,15 @@ console.log('Hi, welcome to Node Pizza');
 var questions = [
   {
     type: 'confirm',
-    name: 'toBeDelivered',
-    message: 'Is this for delivery?',
+	name: 'toBeDelivered',
+	message: 'Is this for delivery?',
+    default: false,
+  },
+  {
+    type: 'confirm',
+	name: 'toBeDelivered',
+	message: 'Is this for delivery?',
+	askAnswered: true,
     default: false,
   },
   {
