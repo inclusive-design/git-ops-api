@@ -1,0 +1,14 @@
+{
+	"extends": ["eslint-config-fluid"],
+	"parserOptions": {
+		"ecmaVersion": 8
+	},
+	"env": {
+		"node": true,
+		"es6": true
+	},
+	"rules": {
+		"indent": ["error", "tab"],
+		"no-console": "off"
+	}
+}
