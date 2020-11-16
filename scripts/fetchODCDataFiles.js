@@ -1,8 +1,13 @@
 // This script checks if a new data file is published on the data source URL. If there is,
 // it downloads the file, writes into a local file and updates the corresponding latest.json.
 //
+// Prerequisites:
+// An environment variable GITHUB_ACCOUNT_URL must be defined before running the script. This variable defines
+// the authenticated github account that pull requests will be issued on behalf of. An example:
+// https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git
+//
 // A sample command that runs this script in the universal root directory:
-// node scripts/update.js
+// node scripts/fetchODCDataFiles.js https://data.ontario.ca/dataset/covid-19-assessment-centre-locations ODC
 
 "use strict";
 
@@ -12,14 +17,28 @@ const JSDOM = require("jsdom").JSDOM;
 const rimraf = require("rimraf");
 const git = require("simple-git")();
 
-// const dataSourceURL = process.argv[2];
-// const localDataFileDir = process.argv[3];
-const dataSourceURL = "https://data.ontario.ca/dataset/covid-19-assessment-centre-locations";
-const localDataFileDir = "ODC";
+const wecountprojectRepoUrl = process.env.GITHUB_ACCOUNT_URL;
+
+if (!wecountprojectRepoUrl) {
+	console.log("Error: Please define an environment variable \"GITHUB_ACCOUNT_URL\" with a value of an authenticated Github account URL that will be used to create remote branches on behalf of this account.\n");
+	console.log("The command to define an temporary environment variable in a terminal: export GITHUB_ACCOUNT_URL={value}\n");
+	console.log("An example of the environment variable value: https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git");
+	process.exit(1);
+}
+
+var dataSourceURL = process.argv[2];
+var dataDirInRepo = process.argv[3];
+
+if (process.argv.length < 3) {
+	console.log("Usage: node scripts/fetchODCDataFiles.js dataSourceURL dataDirInRepo\n");
+	console.log("dataSourceURL: The URL to webpage where the data file for COVID-19 assessment centre locations is published. An example: https://data.ontario.ca/dataset/covid-19-assessment-centre-locations");
+	console.log("dataDirInRepo: The directory where the downloaded data file should be placed in the COVID-19 data repository(https://github.com/inclusive-design/covid-assessment-centres/). This directory is relative to the root directory of the repository ");
+	process.exit(1);
+}
+
 const covidDataRepoUrl = "https://github.com/cindyli/covid-assessment-centres.git";
 // const covidDataRepoUrl = "https://github.com/inclusive-design/covid-assessment-centres.git";
 const clonedLocalDir = "covid-data-repo";
-const wecountprojectRepoUrl = "https://wecount.info%40gmail.com:70c1abfb059d545ada3c98ac8519bc1c9de84230@github.com/wecountproject/covid-assessment-centres.git";
 const githubAPI = "https://api.github.com/graphql";
 
 const latestFileTemplate = "{\n\t\"fileName\": \"$filename\"\n}\n";
@@ -123,7 +142,7 @@ async function createRemoteBranch(branchName, publishedDate, clonedLocalDir) {
 		.add("./*")
 		.commit("feat: commit a new ODC data file published on " + publishedDate)
 		.push("wecountproject", branchName)
-		.catch(() => exitWithError("Error at pushing to a remote branch named " + branchName + ". Check if this remote branch already exists.", clonedLocalDir));
+		.catch((err) => exitWithError("Error at pushing to a remote branch named " + branchName + ". Check either the authentication or whether the remote branch " + branchName + " already exists.\n" + err, clonedLocalDir));
 }
 
 async function issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate) {
@@ -136,10 +155,10 @@ async function issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branch
 
 	const repoInfoResponse = await axios.post(githubAPI, {
 		query: `query {
-	    repository(owner: "${matches[1]}", name: "${matches[2]}") {
-	        url
-	        id
-	    }
+		repository(owner: "${matches[1]}", name: "${matches[2]}") {
+			url
+			id
+		}
 		}`
 	}, {
 		headers:headers
@@ -149,16 +168,16 @@ async function issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branch
 
 	const createPRResponse = await axios.post(githubAPI, {
 		query: `mutation {
-	    createPullRequest (
-		    input: {
-		        baseRefName:"main",
-		        headRefName: "wecountproject:${branchName}",
-		        repositoryId: "${repoId}",
-		        title: "Add a new ODC data file published on ${publishedDate}"
-		    }) {
-		    pullRequest {
-		      url
-		    }
+		createPullRequest (
+			input: {
+				baseRefName:"main",
+				headRefName: "wecountproject:${branchName}",
+				repositoryId: "${repoId}",
+				title: "Add a new ODC data file published on ${publishedDate}"
+			}) {
+			pullRequest {
+			  url
+			}
 		  }
 		}`
 	}, {
@@ -180,20 +199,25 @@ async function main() {
 	let dataFileName = generateDataFileName(publishedDate);
 
 	// Clone the COVID data repo to local directory to check if the data file on the ODC website is new
+	console.log("Checking if a new data file is published on the ODC website...");
 	await prepareLocalRepo(covidDataRepoUrl, clonedLocalDir, wecountprojectRepoUrl);
 
-	const dataFileDir = "./" + clonedLocalDir + "/" + localDataFileDir + "/";
+	const dataFileDir = "./" + clonedLocalDir + "/" + dataDirInRepo + "/";
 	if (hasNewDataFile(dataFileName, dataFileDir)) {
-		// Download the new data file to the local directory
+		console.log("Downloading the new data file...");
 		await downloadDataFile(downloadURL, dataFileDir + dataFileName);
-		// Update latest.json in the local directory
+
+		console.log("Updating latest.json with the new data file name...");
 		fs.writeFileSync(dataFileDir + "latest.json", latestFileTemplate.replace("$filename", dataFileName), "utf8");
-		// Push updated files to a remote branch
+
+		console.log("Pushing updated files to a remote branch...");
 		const branchName = branchNameTemplate.replace("$timestamp", publishedDate);
 		await createRemoteBranch(branchName, publishedDate, clonedLocalDir);
-		// Clean up by remving the cloned repo at local
+
+		console.log("Removing the local temporary directory...");
 		rimraf.sync(clonedLocalDir);
-		// Send a pull request
+
+		console.log("Issuing a pull request based off the remote branch...");
 		const prUrl = await issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate);
 		console.log("Done: A pull request with the new ODC data file has been issued at " + prUrl);
 	} else {

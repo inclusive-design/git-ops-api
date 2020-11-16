@@ -1,9 +1,0 @@
-{
-    "dataRepoOrigin": "https://github.com/inclusive-design/covid-assessment-centres.git",
-    "dataRepoUpstreamBranch": "auto-update-target",
-    "repoFolder": "./data",
-    "dataSourceURL": "https://data.ontario.ca/dataset/covid-19-assessment-centre-locations",
-    "author": "author@example.com",
-    "committer": "committer@example.com",
-    "commitMessage": "feat: add a new published dataset from data.ontario.ca"
-}
