@@ -1,17 +1,18 @@
-var daff = require('daff');
+"use strict";
+var daff = require("daff");
 
 var data1 = [
-    ['Country','Capital'],
-    ['Ireland','Dublin'],
-    ['France','Paris'],
-    ['Spain','Barcelona']
+	["Country","Capital"],
+	["Ireland","Dublin"],
+	["France","Paris"],
+	["Spain","Barcelona"]
 ];
 var data2 = [
-    ['Country','Code','Capital'],
-    ['Ireland','ie','Dublin'],
-    ['France','fr','Paris'],
-    ['Spain','es','Madrid'],
-    ['Germany','de','Berlin']
+	["Country","Code","Capital"],
+	["Ireland","ie","Dublin"],
+	["France","fr","Paris"],
+	["Spain","es","Madrid"],
+	["Germany","de","Berlin"]
 ];
 
 var table1 = new daff.TableView(data1);

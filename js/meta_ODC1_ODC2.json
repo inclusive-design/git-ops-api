@@ -1,0 +1,44 @@
+{
+
+"location_id": "location_id",
+
+"location_name": "location_name",
+
+"location_name_fr": "location_name_fr",
+
+"operated_by": "operated_by",
+
+"operated_by_fr": "operated_by_fr",
+
+"city": "city",
+
+"address": "address",
+
+"address_fr": "address_fr",
+
+"postal_code": "postal_code",
+
+"latitude": "latitude",
+
+"longitude": "longitude",
+
+"phu_id": "phu_id",
+
+"PHU": "PHU",
+
+"PHU_fr": "PHU_fr",
+
+"phone": "phone",
+
+"website": "website",
+
+"monday": "monday",
+
+"tuesday": "tuesday",
+
+"wednesday": "wednesday",
+
+"thursday": "thursday",
+
+"friday": "friday"
+}
