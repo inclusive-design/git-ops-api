@@ -2,9 +2,9 @@
 // it downloads the file, writes into a local file and updates the corresponding latest.json.
 //
 // Prerequisites:
-// An environment variable GITHUB_ACCOUNT_URL must be defined before running the script. This variable defines
-// the authenticated github account that pull requests will be issued on behalf of. An example:
-// https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git
+// Before running this script, an environment variable GITHUB_ACCOUNT_URL must be defined . This variable defines
+// the Github repository URL with an embedded authenticated github account that pull requests will be issued on behalf.
+// An example: https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git
 //
 // A sample command that runs this script in the universal root directory:
 // node scripts/fetchODCDataFiles.js https://data.ontario.ca/dataset/covid-19-assessment-centre-locations ODC
@@ -59,7 +59,7 @@ async function main() {
 	await utils.prepareLocalRepo(covidDataRepoUrl, clonedLocalDir, wecountprojectRepoUrl);
 
 	const dataFileDir = "./" + clonedLocalDir + "/" + dataDirInRepo + "/";
-	if (utils.hasNewDataFile(dataFileName, dataFileDir)) {
+	if (utils.fileNotExists(dataFileName, dataFileDir)) {
 		console.log("Downloading the new data file...");
 		await utils.downloadDataFile(downloadURL, dataFileDir + dataFileName);
 

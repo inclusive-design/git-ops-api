@@ -12,55 +12,59 @@ module.exports = {
 	/**
 	 * Scrape the download link and date of last update from the ODS repository page
 	 * @param {String} dataSourceURL The URL to the webpage where the information of the data file is published
-	 * @return {Object} An object keyed by "downloadURL" (the url to download the new data file) and
-	 * "date" (the last updated date of the data file).
+	 * @return {Object} An object keyed by "downloadUrl" (the url to download the new data file) and
+	 * "date" (the last updated date of the data file in a format of YYYY-MM-DD). These values are `undefined` when
+	 * the csv link is not found or any error happens.
 	 */
 	getDataSource: async (dataSourceURL) => {
+		try {
+			let res = await axios.get(dataSourceURL);
+			let dom = new JSDOM(res.data);
 
-		let res = await axios.get(dataSourceURL);
-		let data = res.data;
-		let dom = new JSDOM(data);
-
-		const findElements = function (selector) {
-			return dom.window.document.querySelectorAll(selector);
-		};
-
-		// find the CSV download link
-		let downloadLink;
-		let as = findElements("a.dataset-download-link");
-		console.log("as: ", as);
-		for (let a of as) {
-			console.log("a: ", a);
-			let link = a.getAttribute("href");
-			if (link.slice(-4) === ".csv") {
-				downloadLink = link;
-				break;
+			// find the CSV download link
+			let downloadLink, publishedDate;
+			let as = dom.window.document.querySelectorAll("a.dataset-download-link");
+			for (let a of as) {
+				const link = a.getAttribute("href");
+				if (link.slice(-4) === ".csv") {
+					downloadLink = link;
+					var dateElmContent = a.closest(".resource-item").querySelector(".description.details").innerHTML;
+					const matchStartStr = "Last Updated: ";
+					const matchEndStr = " |";
+					publishedDate = dateElmContent.substring(dateElmContent.lastIndexOf(matchStartStr) + matchStartStr.length, dateElmContent.lastIndexOf(matchEndStr));
+					publishedDate = module.exports.formatDate(publishedDate);
+					break;
+				}
 			}
-		}
 
-		// find the last date the dataset was updated
-		let lastUpdate;
-		let tableHeaders = findElements("th.dataset-label");
-		for (let header of tableHeaders) {
-			if (header.innerHTML === "Last Validated Date") {
-				lastUpdate = header.parentElement.querySelector("td.dataset-details").innerHTML.trim();
-				break;
-			}
+			return {
+				downloadUrl: downloadLink,
+				publishedDate: publishedDate
+			};
+		} catch (error) {
+			console.log("Error in getDataSource(): " + error);
+			return {
+				downloadUrl: undefined,
+				publishedDate: undefined
+			};
 		}
-
-		return {
-			downloadURL: downloadLink,
-			publishedDate: lastUpdate
-		};
 	},
 
 	/**
-	 * Generate the name for a data file based on the date it was uploaded
-	 * @param {String} date The date the file was uploaded, in ISO 8601 format (YYYY-MM-DD)
-	 * @return {String} The filename in format assessment_centre_locations_YYYY_MM_DD.csv
+	 * Format the date format to YYYY-MM-DD
+	 * @param {String} date A date in any format. In the context of this script, the input format is: November 17, 2020
+	 * @return {String} A date in a format of YYYY-MM-DD. If the input is invalid, return NaN-NaN-NaN
 	 */
-	generateDataFileName: (date) => {
-		return "assessment_centre_locations_" + date.replace(/-/g, "_") + ".csv";
+	formatDate: (date) => {
+		const d = new Date(date);
+		let month = "" + (d.getMonth() + 1),
+			day = "" + d.getDate(),
+			year = d.getFullYear();
+
+		month = month.length < 2 ? "0" + month : month;
+		day = day.length < 2 ? "0" + day : day;
+
+		return [year, month, day].join("-");
 	},
 
 	/**
@@ -69,7 +73,7 @@ module.exports = {
 	 * @param {String} dataFileDir The folder where all data files are located
 	 * @return {Boolean} true if the file name is already present in the data folder, false if not
 	 */
-	hasNewDataFile: (dataFileName, dataFileDir) => {
+	fileNotExists: (dataFileName, dataFileDir) => {
 		let allFiles = fs.readdirSync(dataFileDir);
 		return !allFiles.includes(dataFileName);
 	},
@@ -80,8 +84,12 @@ module.exports = {
 	 * @param {String} targetFileLocation The target file location including the path and file name
 	 */
 	downloadDataFile: async (downloadURL, targetFileLocation) => {
-		let res = await axios.get(downloadURL);
-		fs.writeFileSync(targetFileLocation, res.data, "utf8");
+		try {
+			let res = await axios.get(downloadURL);
+			fs.writeFileSync(targetFileLocation, res.data, "utf8");
+		} catch (error) {
+			// do nothing
+		}
 	},
 
 	exitWithError: (err, clonedLocalDir) => {
@@ -105,5 +113,52 @@ module.exports = {
 			.commit("feat: commit a new ODC data file published on " + publishedDate)
 			.push("wecountproject", branchName)
 			.catch((err) => module.exports.exitWithError("Error at pushing to a remote branch named " + branchName + ". Check either the authentication or whether the remote branch " + branchName + " already exists.\n" + err, clonedLocalDir));
+	},
+
+	issuePullRequest: async (githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate) => {
+		// Parse out the owner and repo name that the pull request will be issued for
+		const pattern = /https:\/\/github.com\/(.*)\/(.*).git/;
+		const matches = pattern.exec(covidDataRepoUrl);
+		const headers = {
+			"Authorization": "bearer " + accessToken
+		};
+
+		const repoInfoResponse = await axios.post(githubAPI, {
+			query: `query {
+			repository(owner: "${matches[1]}", name: "${matches[2]}") {
+				url
+				id
+			}
+			}`
+		}, {
+			headers:headers
+		});
+
+		const repoId = repoInfoResponse.data.data.repository.id;
+
+		const createPRResponse = await axios.post(githubAPI, {
+			query: `mutation {
+			createPullRequest (
+				input: {
+					baseRefName:"main",
+					headRefName: "wecountproject:${branchName}",
+					repositoryId: "${repoId}",
+					title: "Add a new ODC data file published on ${publishedDate}"
+				}) {
+				pullRequest {
+				  url
+				}
+			  }
+			}`
+		}, {
+			headers:headers
+		});
+
+		if (createPRResponse.data.errors) {
+			console.log("Error at creating the new pull request: ", createPRResponse.data.errors);
+			process.exit(1);
+		} else {
+			return createPRResponse.data.data.createPullRequest.pullRequest.url;
+		}
 	}
 };
