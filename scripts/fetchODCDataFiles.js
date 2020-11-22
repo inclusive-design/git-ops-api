@@ -1,5 +1,14 @@
+/*
+Copyright 2020 OCAD University
+
+Licensed under the New BSD license. You may not use this file except in compliance with this licence.
+You may obtain a copy of the BSD License at
+https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICENSE
+*/
+
 // This script checks if a new data file is published on the data source URL. If there is,
-// it downloads the file, writes into a local file and updates the corresponding latest.json.
+// the script downloads the file, updates the corresponding latest.json and issues a pull request
+// against [the COVID data repository](https://github.com/inclusive-design/covid-assessment-centres/).
 //
 // Prerequisites:
 // Before running this script, an environment variable GITHUB_ACCOUNT_URL must be defined . This variable defines
@@ -51,8 +60,14 @@ const accessToken = matches[1];
 // The main function
 async function main() {
 	// Find the date of the data file currently on the ODC website
-	let { downloadURL, publishedDate } = await utils.getDataSource(dataSourceURL);
-	let dataFileName = utils.generateDataFileName(publishedDate);
+	const { downloadUrl, publishedDate } = await utils.getDataSource(dataSourceURL);
+
+	// Exit with an error if a csv data file is not found at the data source website.
+	if (!downloadUrl) {
+		console.log("Error: A csv data file is not found at " + dataSourceURL);
+		process.exit(1);
+	}
+	const dataFileName = "assessment_centre_locations_" + publishedDate.replace(/-/g, "_") + ".csv";
 
 	// Clone the COVID data repo to local directory to check if the data file on the ODC website is new
 	console.log("Checking if a new data file is published on the ODC website: " + dataSourceURL + "...");
@@ -61,7 +76,7 @@ async function main() {
 	const dataFileDir = "./" + clonedLocalDir + "/" + dataDirInRepo + "/";
 	if (utils.fileNotExists(dataFileName, dataFileDir)) {
 		console.log("Downloading the new data file...");
-		await utils.downloadDataFile(downloadURL, dataFileDir + dataFileName);
+		await utils.downloadDataFile(downloadUrl, dataFileDir + dataFileName);
 
 		console.log("Updating latest.json with the new data file name...");
 		fs.writeFileSync(dataFileDir + "latest.json", latestFileTemplate.replace("$filename", dataFileName), "utf8");

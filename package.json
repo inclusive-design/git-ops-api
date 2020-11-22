@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
 	"scripts": {
-		"lint": "grunt lint"
+		"lint": "grunt lint",
+		"test": "node tests/all-tests.js"
 	},
 	"author": "Inclusive Design Research Centre",
 	"license": "BSD-3-Clause",
