@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en"> <!--<![endif]-->
+  <head>
+    <link rel="stylesheet" type="text/css" href="/fanstatic/vendor/:version:2020-11-10T02:19:39.48/select2/select2.min.css" />
+<link rel="stylesheet" type="text/css" href="/fanstatic/css/:version:2020-11-10T02:19:39.45/main.min.css" />
+<link rel="stylesheet" type="text/css" href="/fanstatic/vendor/:version:2020-11-10T02:19:39.48/font-awesome/css/font-awesome.min.css" />
+<link rel="stylesheet" type="text/css" href="/fanstatic/ontario_theme/:version:2020-11-03T01:52:23.26/ontario_theme.css" />
+<link rel="stylesheet" type="text/css" href="/fanstatic/ontario_theme_external/:version:2020-11-03T01:52:23.26/ontario_theme.css" />
+
+    <meta charset="utf-8" />
+      <meta name="generator" content="ckan 2.8.6" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 testing locations - Datasets - Ontario Data Catalogue</title>
+
+
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+  <script src="//www.webservices.gov.on.ca/metrics.js" type="text/javascript" charset="utf-8"></script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-TK6PW9Z');</script>
+<!-- End Google Tag Manager -->
+
+
+
+
+
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i" rel="stylesheet">
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:title" content="COVID-19 testing locations - Ontario Data Catalogue">
+  <meta property="og:description" content="Get a list of COVID-19 assessment centres. Before you go, you should check if:
+
+The centre is open
+They have drive-through or walk-in testing
+They will test small children or babies
+You need to...">
+
+
+  </head>
+
+
+  <body data-site-root="https://data.ontario.ca/" data-locale-root="https://data.ontario.ca/" >
+
+
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-TK6PW9Z"
+  height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
+
+  <a href="#content" class="skip-main sr-only sr-only-focusable">Skip to content</a>
+
+
+
+
+
+
+
+
+    <header class="account-masthead">
+      <div class="container">
+
+        <hgroup class="header-text-logo navbar-left">
+          <a class="logo" href="https://ontario.ca/"><img src="/logo-ontario@2x.png" alt="Government of Ontario" /></a>
+        </hgroup>
+
+
+          <nav class="account not-authed">
+            <ul class="list-unstyled">
+
+
+
+                <li>
+
+
+
+
+
+<a href="/fr/dataset/covid-19-assessment-centre-locations" title="fr">
+  français
+</a>
+                </li>
+
+            </ul>
+          </nav>
+
+      </div>
+    </header>
+
+
+<header class="navbar navbar-static-top masthead">
+
+  <div class="container">
+    <div class="navbar-right">
+      <button data-target="#main-navigation-toggle" data-toggle="collapse" class="navbar-toggle collapsed" aria-expanded="false" type="button" aria-label="Toggle navigation">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="fa fa-bars" aria-hidden="true"></span>
+      </button>
+    </div>
+    <hgroup class="header-text-logo navbar-left">
+
+
+
+    <a href="/">Data Catalogue</a>
+
+
+
+
+    </hgroup>
+
+    <div class="collapse navbar-collapse" id="main-navigation-toggle">
+
+        <nav class="section navigation">
+          <ul class="list-inline">
+
+              <li><a href="/dataset">Datasets</a></li><li><a href="/organization">Organizations</a></li><li><a href="/group">Groups</a></li><li><a href="/about">About</a></li><li><a href="/help">Help</a></li>
+
+          </ul>
+        </nav>
+
+
+        <form class="section site-search simple-input" action="/dataset" method="get">
+          <div class="field">
+            <label for="field-sitewide-search">Search Datasets</label>
+            <input id="field-sitewide-search" type="text" class="form-control" name="q" placeholder="Search" />
+            <button class="btn-search" type="submit" aria-label="Submit Search"><i class="fa fa-search" aria-hidden="true"></i><span class="sr-only">Submit Search</span></button>
+          </div>
+        </form>
+
+    </div>
+  </div>
+</header>
+
+  <header id="survey">
+    <div class="alert alert-warning alert-clear alert-banner">
+      <div class="container">
+        Tell us what you think about our data and how you’re using it. <a href="https://www.ontario.ca/form/survey-open-data-catalogue" target="_blank">Take our survey</a>
+      </div>
+    </div>
+</header>
+
+
+    <div role="main">
+      <div id="content" class="container">
+
+
+
+
+            <div class="flash-messages">
+
+
+
+            </div>
+
+
+
+
+
+
+
+            <div class="toolbar">
+
+
+                  <ol class="breadcrumb">
+
+<li class="home"><a href="/"><i class="fa fa-home"></i><span> Home</span></a></li>
+
+
+
+
+
+
+
+      <li><a href="/organization">Organizations</a></li>
+      <li id='ministry-name' ministry-name="Treasury Board Secretariat" ministry-name-fr="Secrétariat du Conseil du Trésor"><a href="/organization/treasury-board-secretariat">Treasury Board Secretariat</a></li>
+
+    <li id='dataset-name' dataset-name="COVID-19 testing locations" dataset-name-fr="Emplacements des centres de dépistage de la COVID-19"  class="active"><a class=" active" href="/dataset/covid-19-assessment-centre-locations">COVID-19 testing locations</a></li>
+
+
+                  </ol>
+
+
+            </div>
+
+
+
+
+
+
+
+
+  <div class="row wrapper">
+
+
+
+
+
+
+
+              <aside class="secondary col-sm-3">
+
+
+
+
+
+
+  <div class="module module-narrow module-shallow context-info">
+    <h2 class="module-heading">Keep updated</h2>
+    <section class="module-content">
+      <p>
+        Subscribe to updates to this dataset using RSS.
+      </p>
+      <p>
+        <a href="/feeds/custom.atom?q=name:covid-19-assessment-centre-locations" class="btn btn-primary">
+          <i class="fa fa-rss"></i> Subscribe
+        </a>
+      </p>
+    </section>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+  <div class="module module-narrow module-shallow context-info">
+
+      <h2 class="module-heading"><i class="fa fa-building-o"></i> Organization</h2>
+
+    <section class="module-content">
+
+
+        <div class="image">
+          <a href="/organization/treasury-board-secretariat">
+            <img src="https://data.ontario.ca/uploads/group/2020-03-19-204843.643044treasuryboard.jpg" width="200" alt="treasury-board-secretariat" />
+          </a>
+        </div>
+
+
+  <h1 class="heading">Treasury Board Secretariat
+
+  </h1>
+
+
+
+    <p>
+      Leading the government's efforts on accountability, openness and modernization, we help deliver good government and excellent public services in the most effective and efficient...
+      <a href="/organization/about/treasury-board-secretariat">read more</a>
+    </p>
+
+
+
+
+    </section>
+  </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <section class="module module-narrow module-shallow license">
+
+            <h2 class="module-heading"><i class="fa fa-lock"></i> License</h2>
+
+
+  <p class="module-content">
+
+
+  <span property="dc:rights">
+
+      <a href="https://www.ontario.ca/page/open-government-licence-ontario" rel="dc:rights">Open Government Licence – Ontario</a>
+
+  </span>
+
+
+
+  </p>
+  <p class="module-content">
+
+      Data in this record is open and is published in the language in which it’s collected. Please contact us to obtain assistance in either official language.
+
+  </p>
+
+        </section>
+
+
+
+
+
+
+
+              </aside>
+
+
+
+
+
+
+
+              <div class="primary col-sm-9 col-xs-12">
+
+
+                  <article class="module">
+
+                      <header class="module-content page-header">
+
+                        <ul class="nav nav-tabs">
+
+  <li class="active"><a href="/dataset/covid-19-assessment-centre-locations">Dataset</a></li>
+  <li><a href="/dataset/groups/covid-19-assessment-centre-locations"><i class="fa fa-users"></i> Groups</a></li>
+  <li><a href="/dataset/activity/covid-19-assessment-centre-locations"><i class="fa fa-clock-o"></i> Activity Stream</a></li>
+
+                        </ul>
+                      </header>
+
+                    <div class="module-content">
+
+
+
+
+
+
+
+
+
+
+
+    <h1>
+
+        COVID-19 testing locations
+
+
+
+    </h1>
+
+    <div class="notes embedded-content">
+      <p>Get a list of COVID-19 assessment centres. Before you go, you should check if: </p>
+<ul>
+<li>The centre is open</li>
+<li>They have drive-through or walk-in testing</li>
+<li>They will test small children or babies</li>
+<li>You need to make an appointment</li>
+<li>You need to speak to a staff member about your condition (prescreening)</li>
+</ul>
+<p>All assessment centres will test you if you would like to be tested. </p>
+<p>Call the assessment centre or your local public health unit if you have questions.</p>
+<p>You <strong>do not</strong> need a health (OHIP) card for a test. It is a free service.</p>
+<p>Data includes (where available):</p>
+<ul>
+<li>Location name </li>
+<li>Location operator</li>
+<li>Physical address</li>
+<li>Phone number</li>
+<li>Website </li>
+<li>Public Health Unit (PHU)</li>
+<li>Latitude </li>
+<li>Longitude</li>
+<li>Physical address</li>
+<li>Phone number</li>
+<li>Hours of operation</li>
+<li>Age restrictions</li>
+<li>Appointment requested </li>
+<li>Drive through availability </li>
+<li>Walk in availability </li>
+<li>Temporary closure</li>
+<li>Active centre (indefinite closures)</li>
+</ul>
+    </div>
+
+  <h3>Contact</h3>
+
+
+
+
+
+
+  <div>
+
+      Ontario&#39;s Open Data Team
+
+
+
+    <a href="mailto:opengov@ontario.ca?subject=COVID-19 testing locations">
+      opengov@ontario.ca
+    </a>
+
+  </div>
+
+
+    <span class="insert-comment-thread"></span>
+
+
+
+
+
+<section id="dataset-resources" class="resources">
+  <h3>Data</h3>
+
+
+
+
+    <div class="new-alert alert-open alert-large alert-clear">
+
+      <strong>Data Available</strong>
+        <p>
+           The data described here is available for you to use. <a href="https://www.ontario.ca/page/ontarios-open-data-directive">[Learn more]</a><br /> <a href="https://www.ontario.ca/page/open-government-licence-ontario">[See the licence for how you're allowed to use this data.]</a>
+        </p>
+
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <h4 class="empty">No date range</h4>
+
+            <ul class="resource-list">
+
+
+
+
+
+
+<li class="resource-item row" data-id="c60993bb-3988-4648-9be9-398dee480514">
+  <div class="col-md-6 col-xs-12">
+
+      <a class="heading" href="/dataset/covid-19-assessment-centre-locations/resource/c60993bb-3988-4648-9be9-398dee480514" title="COVID-19 assessment centre locations">
+        COVID-19 assessment centre locations<span class="format-label" property="dc:format" data-format="csv">CSV</span>
+
+          <span class="text-muted small">
+            (195.4 KiB)
+          </span>
+
+
+
+      </a>
+
+
+
+        <p class="description details">
+
+            Last Updated: November 17, 2020 |
+
+
+            <span class="label label-english_and_french">
+              English and French
+            </span>
+
+        </p>
+
+      <p class="description">
+
+      </p>
+
+  </div>
+  <div class="col-md-6 col-xs-12 text-right">
+
+
+      <div>
+
+            <a href="/dataset/covid-19-assessment-centre-locations/resource/c60993bb-3988-4648-9be9-398dee480514" class="btn btn-primary">
+
+                <i class="fa fa-bar-chart-o"></i>
+                Preview
+
+            </a>
+
+            <a href="https://data.ontario.ca/dataset/8ba078b2-ca9b-44c1-b5db-9674d85421f9/resource/c60993bb-3988-4648-9be9-398dee480514/download/assessment_centre_locations.csv" class="resource-url-analytics btn btn-primary dataset-download-link" target="_blank">
+
+                <i class="fa fa-arrow-circle-o-down"></i>
+                Download
+
+            </a>
+
+
+
+      </div>
+
+
+  </div>
+</li>
+
+
+
+
+
+
+
+<li class="resource-item row" data-id="1b073d1d-f832-4015-8bc0-d3381e84a465">
+  <div class="col-md-6 col-xs-12">
+
+      <a class="heading" href="/dataset/covid-19-assessment-centre-locations/resource/1b073d1d-f832-4015-8bc0-d3381e84a465" title="COVID-19 assessment centre locations">
+        COVID-19 assessment centre locations<span class="format-label" property="dc:format" data-format="json">JSON</span>
+
+          <span class="text-muted small">
+            (202 KiB)
+          </span>
+
+
+
+      </a>
+
+
+
+        <p class="description details">
+
+            Last Updated: November 17, 2020 |
+
+
+            <span class="label label-english_and_french">
+              English and French
+            </span>
+
+        </p>
+
+      <p class="description">
+
+      </p>
+
+  </div>
+  <div class="col-md-6 col-xs-12 text-right">
+
+
+      <div>
+
+            <a href="/dataset/covid-19-assessment-centre-locations/resource/1b073d1d-f832-4015-8bc0-d3381e84a465" class="btn btn-primary">
+
+                <i class="fa fa-info-circle"></i>
+                About
+
+            </a>
+
+            <a href="https://covid-19.ontario.ca/covid-19-ac-assets/data/locations.json" class="resource-url-analytics btn btn-primary dataset-download-link" target="_blank">
+
+                <i class="fa fa-arrow-circle-o-down"></i>
+                Download
+
+            </a>
+
+
+
+      </div>
+
+
+  </div>
+</li>
+
+
+
+
+
+
+
+
+<li class="resource-item row" data-id="f4aba44a-a90f-446d-9852-f12cb2d2e0b6">
+  <div class="col-md-6 col-xs-12">
+
+      <a class="heading" href="/dataset/covid-19-assessment-centre-locations/resource/f4aba44a-a90f-446d-9852-f12cb2d2e0b6" title="COVID-19 assessment centre locations">
+        COVID-19 assessment centre locations<span class="format-label" property="dc:format" data-format="data"></span>
+
+          <span class="text-muted small">
+            (764.3 KiB)
+          </span>
+
+
+
+      </a>
+
+
+
+        <p class="description details">
+
+            Last Updated: November 17, 2020 |
+
+
+            <span class="label label-english_and_french">
+              English and French
+            </span>
+
+        </p>
+
+      <p class="description">
+
+      </p>
+
+  </div>
+  <div class="col-md-6 col-xs-12 text-right">
+
+
+      <div>
+
+            <a href="/dataset/covid-19-assessment-centre-locations/resource/f4aba44a-a90f-446d-9852-f12cb2d2e0b6" class="btn btn-primary">
+
+                <i class="fa fa-info-circle"></i>
+                About
+
+            </a>
+
+            <a href="https://data.ontario.ca/dataset/8ba078b2-ca9b-44c1-b5db-9674d85421f9/resource/f4aba44a-a90f-446d-9852-f12cb2d2e0b6/download/assessment_centre_locations.geojson" class="resource-url-analytics btn btn-primary dataset-download-link" target="_blank">
+
+                <i class="fa fa-arrow-circle-o-down"></i>
+                Download
+
+            </a>
+
+
+
+      </div>
+
+
+  </div>
+</li>
+
+
+
+            </ul>
+
+
+      <h3>Supporting Files</h3>
+      <ul class="resource-list">
+
+
+      </ul>
+
+
+</section>
+
+
+
+
+
+
+
+  <section class="additional-info">
+  <h3>Additional Info</h3>
+  <table class="table table-striped table-bordered table-condensed">
+    <thead>
+      <tr>
+        <th scope="col">Field</th>
+        <th scope="col">Value</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="row" class="dataset-label">Tags</th>
+        <td class="dataset-details"><section class="tags">
+
+  <ul class="tag-list">
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=Government+and+Finance">Government and Finance</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=Health">Health</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=covid-19">covid-19</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=coronavirus">coronavirus</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=covid">covid</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=testing">testing</a>
+        </li>
+
+
+
+        <li>
+          <a class="tag" href="/dataset?keywords_en=covid-19+testing+locations">covid-19 testing lo...</a>
+        </li>
+
+
+  </ul>
+
+</section></td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Geographic coverage</th>
+        <td class="dataset-details">Ontario</td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Geography Breakdown</th>
+        <td class="dataset-details">None</td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Source URL/Address</th>
+        <td class="dataset-details" property="foaf:homepage"><a href="https://covid-19.ontario.ca/assessment-centre-locations/" rel="foaf:homepage" target="_blank">https://covid-19.ontario.ca/assessment-centre-locations/</a></td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Maintainer</th>
+        <td class="dataset-details" property="dc:contributor"></td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Author</th>
+        <td class="dataset-details" property="dc:creator"></td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Author Email</th>
+        <td class="dataset-details" property="dc:creator"><a href=mailto:></a></td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Maintainer branch</th>
+        <td class="dataset-details">Ontario Digital Service</td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Last Validated Date</th>
+        <td class="dataset-details">
+  2020-08-20
+</td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Update frequency</th>
+        <td class="dataset-details">As required</td>
+      </tr><tr>
+        <th scope="row" class="dataset-label">Access instructions</th>
+        <td class="dataset-details"></td>
+      </tr>
+
+    </tbody>
+  </table>
+</section>
+
+
+
+
+                    </div>
+                  </article>
+
+              </div>
+
+
+
+  </div>
+
+      </div>
+    </div>
+
+    <footer class="site-footer">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-7 footer-links">
+
+
+          <ul class="list-inline">
+
+                <li><a href="https://www.ontario.ca/page/accessibility">accessibility</a></li>
+                <li><a href="https://www.ontario.ca/page/privacy-statement">privacy</a></li>
+                <li><a href="https://www.ontario.ca/page/terms-use">terms of use</a></li>
+
+          </ul>
+          <p class="small">
+            <a href="https://www.ontario.ca/page/copyright-information-c-queens-printer-ontario">&copy; Queen&#8217;s Printer for Ontario, 2012-18</a>
+          </p>
+
+
+      </div>
+      <div class="col-md-2 footer-contactus">
+
+          <strong>Contact Us</strong>
+          <div>
+              <a class="btn btn-grey" href="https://www.ontario.ca/feedback/contact-us?id=33142&nid=53950">
+                <i class="material-icons">mail</i>
+                <i class="material-icons"> / </i>
+                <i class="material-icons">phone</i>
+              </a>
+          </div>
+      </div>
+      <div class="col-md-3 attribution">
+
+
+          <p><strong>Powered by</strong> <a class="hide-text ckan-footer-logo" href="http://ckan.org"><abbr title="Comprehensive Knowledge Archive Network">CKAN</abbr></a></p>
+
+
+
+          <!-- snippet "snippets/language_selector.html" -->
+
+      </div>
+    </div>
+
+  </div>
+
+
+
+
+
+</footer>
+
+
+
+
+
+
+
+
+
+
+  <script>document.getElementsByTagName('html')[0].className += ' js';</script>
+<script type="text/javascript" src="/fanstatic/vendor/:version:2020-11-10T02:19:39.48/jquery.min.js"></script>
+<script type="text/javascript" src="/fanstatic/vendor/:version:2020-11-10T02:19:39.48/:bundle:bootstrap/js/bootstrap.min.js;jed.min.js;moment-with-locales.min.js;select2/select2.min.js"></script>
+<script type="text/javascript" src="/fanstatic/base/:version:2020-11-10T02:19:39.45/:bundle:plugins/jquery.inherit.min.js;plugins/jquery.proxy-all.min.js;plugins/jquery.url-helpers.min.js;plugins/jquery.date-helpers.min.js;plugins/jquery.slug.min.js;plugins/jquery.slug-preview.min.js;plugins/jquery.truncator.min.js;plugins/jquery.masonry.min.js;plugins/jquery.form-warning.min.js;plugins/jquery.images-loaded.min.js;sandbox.min.js;module.min.js;pubsub.min.js;client.min.js;notify.min.js;i18n.min.js;main.min.js;modules/select-switch.min.js;modules/slug-preview.min.js;modules/basic-form.min.js;modules/confirm-action.min.js;modules/api-info.min.js;modules/autocomplete.min.js;modules/custom-fields.min.js;modules/data-viewer.min.js;modules/table-selectable-rows.min.js;modules/resource-form.min.js;modules/resource-upload-field.min.js;modules/resource-reorder.min.js;modules/resource-view-reorder.min.js;modules/follow.min.js;modules/activity-stream.min.js;modules/dashboard.min.js;modules/resource-view-embed.min.js;view-filters.min.js;modules/resource-view-filters-form.min.js;modules/resource-view-filters.min.js;modules/table-toggle-more.min.js;modules/dataset-visibility.min.js;modules/media-grid.min.js;modules/image-upload.min.js;modules/followers-counter.min.js"></script>
+<script type="text/javascript" src="/fanstatic/base/:version:2020-11-10T02:19:39.45/tracking.min.js"></script></body>
+</html>
