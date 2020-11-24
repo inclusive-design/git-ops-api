@@ -55,6 +55,8 @@ module.exports = {
 			}
 
 			const numOfCsvLinks = csvLinks.length;
+
+			// Return the csv link and its published date only when one and only one csv link is found. Otherwise, report error.
 			if (numOfCsvLinks === 1) {
 				return csvLinks[0];
 			} else if (numOfCsvLinks === 0) {

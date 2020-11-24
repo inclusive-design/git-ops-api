@@ -22,11 +22,11 @@ has been updated, this script downloads the file, updates the corresponding late
 against the [COVID assessment centres data repository](https://github.com/inclusive-design/covid-assessment-centres/).
 
 * Prerequisites: Tasks below need to complete before running the script:
-  - Define an environment variable `GITHUB_ACCOUNT_URL`: This variable defines the Github repository URL with an
+  * Define an environment variable `GITHUB_ACCOUNT_URL`: This variable defines the Github repository URL with an
 embedded authenticated Github account that pull requests will be issued on behalf. Refer to [the Github documentation](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/creating-a-personal-access-token)
 about how to create a Github personal access token and use it for authenticating HTTPS Git operations.
 An example: `https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git`
-  - Visit [the config file](./scripts/fetchODCConfig.json5) to set proper config values. Purpose of these values are
+  * Visit [the config file](./scripts/fetchODCConfig.json5) to set proper config values. Purpose of these values are
 explained in the config file.
 
 * How to run:

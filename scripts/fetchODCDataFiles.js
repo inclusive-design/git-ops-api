@@ -42,6 +42,8 @@ const covidDataRepoUrl = config.covidDataRepoUrl;
 const githubAPI = config.githubAPI;
 const latestFileTemplate = config.latestFileTemplate;
 const branchNameTemplate = config.branchNameTemplate;
+
+// The name of the temporary local directory for cloning the covid data repo locally
 const clonedLocalDir = "covid-data-repo";
 
 // Use regex to parse out the personal access token and the repo name embedded in the `wecountprojectRepoUrl`
