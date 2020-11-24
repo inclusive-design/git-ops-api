@@ -25,8 +25,8 @@ const fullSitePath = odsHostname + odsPath;
 //****************** Test getDataSource() ******************
 
 const getDataSourceTestCases = {
-	hasCsv: {
-		message: "The response contains a download link pointing to a csv format: download link and the published date is returned",
+	hasOneCsv: {
+		message: "Return the download link and the published date when the data source contains and only contains one csv download link",
 		nockConfig: {
 			status: 200,
 			response: fs.readFileSync(__dirname + "/data/responseWithCsv.html")
@@ -37,14 +37,36 @@ const getDataSourceTestCases = {
 		}
 	},
 	noCsv: {
-		message: "The response doesn't contain a download link pointing to a csv format: download link and the published date returns undefined",
+		message: "Report the error when the data source doesn't contain any csv download link",
 		nockConfig: {
 			status: 200,
 			response: fs.readFileSync(__dirname + "/data/responseWithoutCsv.html")
 		},
 		expected: {
-			downloadUrl: undefined,
-			publishedDate: undefined
+			"isError": true,
+    	"message": "CSV download link is not found on the data source (https://data.ontario.ca/dataset/covid-19-assessment-centre-locations)"
+		}
+	},
+	moreThanOneCsv: {
+		message: "Report the error when the data source contains more than one csv download links",
+		nockConfig: {
+			status: 200,
+			response: fs.readFileSync(__dirname + "/data/responseWithMoreThanOneCsv.html")
+		},
+		expected: {
+			"isError": true,
+    	"message": "More than one CSV download link are found on the data source (https://data.ontario.ca/dataset/covid-19-assessment-centre-locations): [{\"downloadUrl\":\"https://data.ontario.ca/dataset/1.csv\",\"publishedDate\":\"2020-11-17\"},{\"downloadUrl\":\"https://data.ontario.ca/dataset/2.csv\",\"publishedDate\":\"2020-11-18\"},{\"downloadUrl\":\"https://data.ontario.ca/dataset/3.csv\",\"publishedDate\":\"2020-11-19\"}]"
+		}
+	},
+	wrongPublishedDate: {
+		message: "Report the error when any published date is wrong",
+		nockConfig: {
+			status: 200,
+			response: fs.readFileSync(__dirname + "/data/responseWithWrongPublishedDate.html")
+		},
+		expected: {
+			"isError": true,
+    	"message": "The published date (2020/11/18) is not recognizable. Check if it is in the format or \"month dd, yyyy\""
 		}
 	},
 	serverDown: {
@@ -54,22 +76,67 @@ const getDataSourceTestCases = {
 			response: ""
 		},
 		expected: {
-			downloadUrl: undefined,
-			publishedDate: undefined
+			"isError": true,
+    	"message": "Error in getDataSource() - Error: Request failed with status code 400"
 		}
 	}
 };
 
 fluid.each(getDataSourceTestCases, function (oneCase, key) {
-	jqUnit.asyncTest("Test getDataSource() - " + key, function () {
+	jqUnit.test("Test getDataSource() - " + key, function () {
 		jqUnit.expect(1);
 		// setup nock to mock the response from the data source
 		nock(odsHostname).get(odsPath).reply(oneCase.nockConfig.status, oneCase.nockConfig.response);
-
-		utils.getDataSource(fullSitePath).then(function (result) {
+		return utils.getDataSource(fullSitePath).then(function (result) {
 			jqUnit.assertDeepEq(oneCase.message, oneCase.expected, result);
-			jqUnit.start();
 		});
+	});
+});
+
+// ****************** Test isValidDate() ******************
+
+jqUnit.test("Test isValidDate()", function () {
+	const testCases = {
+		correct1: {
+			message: "Correct format",
+			input: "November 17, 2020",
+			expected: true
+		},
+		missingMonth: {
+			message: "Correct format",
+			input: " 17, 2020",
+			expected: false
+		},
+		incorrectFormat1: {
+			message: "Convert the input format of 11/17/2020",
+			input: "11/17/2020",
+			expected: false
+		},
+		incorrectFormat2: {
+			message: "Convert the input format of 17 November 2020",
+			input: "17 November 2020",
+			expected: false
+		},
+		undefinedInput: {
+			message: "The input is undefined",
+			input: undefined,
+			expected: false
+		},
+		emptyInput: {
+			message: "The input is empty",
+			input: "",
+			expected: false
+		},
+		missingYear: {
+			message: "The input format is invalid",
+			input: "20 November",
+			expected: false
+		}
+	};
+
+	jqUnit.expect(7);
+	fluid.each(testCases, function (oneCase) {
+		jqUnit.assertEquals(oneCase.message, oneCase.expected, utils.isValidDate(oneCase.input));
 	});
 });
 
@@ -83,33 +150,58 @@ jqUnit.test("Test formatDate()", function () {
 			expected: "2020-11-17"
 		},
 		format2: {
+			message: "Convert the input format of November 17, 2020",
+			input: "Nov 17, 2020",
+			expected: "2020-11-17"
+		},
+		wrongMonth: {
+			message: "Correct format with a wrong mon",
+			input: "wrong 17, 2020",
+			expected: "NaN-NaN-NaN"
+		},
+		wrongDay: {
+			message: "Correct format with a wrong mon",
+			input: "Nov 32, 2020",
+			expected: "NaN-NaN-NaN"
+		},
+		incorrectFormat1: {
 			message: "Convert the input format of 11/17/2020",
 			input: "11/17/2020",
-			expected: "2020-11-17"
+			expected: "NaN-NaN-NaN"
 		},
-		format3: {
+		incorrectFormat2: {
 			message: "Convert the input format of 17 November 2020",
 			input: "17 November 2020",
-			expected: "2020-11-17"
+			expected: "NaN-NaN-NaN"
 		},
-		special1: {
+		undefinedInput: {
 			message: "The input is undefined",
 			input: undefined,
 			expected: "NaN-NaN-NaN"
 		},
-		special2: {
+		emptyInput: {
 			message: "The input is empty",
 			input: "",
 			expected: "NaN-NaN-NaN"
 		},
-		special3: {
+		stringInput: {
 			message: "The input format is invalid",
 			input: "a random string1",
+			expected: "NaN-NaN-NaN"
+		},
+		missingYear: {
+			message: "The input format is invalid",
+			input: "20 November",
+			expected: "NaN-NaN-NaN"
+		},
+		missingDay: {
+			message: "The input format is invalid",
+			input: "November 2020",
 			expected: "NaN-NaN-NaN"
 		}
 	};
 
-	jqUnit.expect(6);
+	jqUnit.expect(11);
 	fluid.each(testCases, function (oneCase) {
 		jqUnit.assertEquals(oneCase.message, oneCase.expected, utils.formatDate(oneCase.input));
 	});
@@ -155,6 +247,7 @@ const downloadDataFileTestCases = {
 			response: "test file content"
 		},
 		fileExists: true,
+		response: true,
 		targetFileLocation: __dirname + "/data/temp.txt"
 	},
 	downloadFail: {
@@ -164,17 +257,20 @@ const downloadDataFileTestCases = {
 			response: undefined
 		},
 		fileExists: false,
+		response: {
+			isError: true
+		},
 		targetFileLocation: __dirname + "/data/temp.txt"
 	}
 };
 
 fluid.each(downloadDataFileTestCases, function (oneCase, key) {
-	jqUnit.asyncTest("Test downloadDataFile() - " + key, function () {
-		jqUnit.expect(1);
+	jqUnit.test("Test downloadDataFile() - " + key, function () {
+		jqUnit.expect(2);
 		// setup nock to mock the response from the data source
 		nock(odsHostname).get(odsPath).reply(oneCase.nockConfig.status, oneCase.nockConfig.response);
 
-		utils.downloadDataFile(fullSitePath, oneCase.targetFileLocation).then(function () {
+		return utils.downloadDataFile(fullSitePath, oneCase.targetFileLocation).then(function (res) {
 			if (oneCase.fileExists) {
 				const resultContent = fs.readFileSync(oneCase.targetFileLocation, "utf8");
 				jqUnit.assertEquals(oneCase.message, oneCase.nockConfig.response, resultContent);
@@ -182,7 +278,11 @@ fluid.each(downloadDataFileTestCases, function (oneCase, key) {
 			} else {
 				jqUnit.assertFalse("The target file does not exist", fs.existsSync(oneCase.targetFileLocation));
 			}
-			jqUnit.start();
+			if (oneCase.response.isError) {
+				jqUnit.assertEquals("The value of isError is expected", oneCase.response.isError, res.isError);
+			} else {
+				jqUnit.assertEquals("The value of isError is expected", oneCase.response, res);
+			}
 		});
 	});
 });
