@@ -9,6 +9,7 @@
 	},
 	"rules": {
 		"indent": ["error", "tab"],
-		"no-console": "off"
+		"no-console": "off",
+		"dot-notation": [2, {"allowKeywords": true}]
 	}
 }

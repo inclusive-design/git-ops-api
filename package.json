@@ -3,7 +3,8 @@
 	"version": "0.1.0",
 	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
 	"scripts": {
-		"lint": "grunt lint"
+		"lint": "grunt lint",
+		"test": "node tests/all-tests.js"
 	},
 	"author": "Inclusive Design Research Centre",
 	"license": "BSD-3-Clause",
@@ -14,12 +15,18 @@
 		"data-forge-fs": "0.0.8",
 		"fs": "0.0.1-security",
 		"inquirer": "7.3.3",
-		"jsdom": "16.4.0",
 		"lodash": "4.17.20",
+		"eslint-config-fluid": "1.4.0",
 		"fluid-grunt-lint-all": "2.0.0",
-		"eslint-config-fluid": "1.4.0"
+		"jsdom": "16.4.0",
+		"json5": "2.1.3",
+		"rimraf": "3.0.2",
+		"simple-git": "2.21.0"
 	},
 	"devDependencies": {
-		"grunt": "1.3.0"
+		"grunt": "1.3.0",
+		"infusion": "3.0.0-dev.20201113T153152Z.32176dcbe.FLUID-6145",
+		"nock": "13.0.5",
+		"node-jqunit": "1.1.8"
 	}
 }
