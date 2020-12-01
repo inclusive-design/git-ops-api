@@ -3,32 +3,32 @@
 const dataForge = require("data-forge");
 require("data-forge-fs"); // For readFile/writeFile.
 const fs = require("fs"); // For saving results to a .html to visualize
-const utils = require("./utils");
 const daff = require("daff"); // Load diff algorithm dependencies.
 
-const ancestorRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_05_29.csv";
-const latestAncestorRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/";
-// const latestAncestorRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/WeCount/";
+// Load in Data
+let fileInputs = {};
+fileInputs[1] = ["A", "data/test_data/case3_Ancestor.csv"];
+fileInputs[2] = ["R", "data/test_data/case3_Remote.csv"];
+fileInputs[3] = ["L", "data/test_data/case3_Local.csv"];
+
+const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
+const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
+
+let localData = dataForge.readFileSync( local[1] ).parseCSV();
+let remoteData = dataForge.readFileSync( remote[1] ).parseCSV();
 
 async function main() {
-	// Load data from CSV files.
-	const primaryDataString = await utils.getRemoteFileContent( ancestorRawURL );
-	const foreignDataString = await utils.getLatestRemoteFileContent( latestAncestorRawURL );
-
-	let data1 = dataForge.fromCSV( primaryDataString );
-	let data2 = dataForge.fromCSV( foreignDataString );
-
 	// Change data to row format to be used as inputs for daff's diff algorithm.
 	// Note: when data is changed to row format title row is excluded so it must be added manually.
-	const data1ColumnNames = data1.getColumnNames();
-	data1 = [data1ColumnNames].concat(data1.toRows());
+	const localDataColumnNames = localData.getColumnNames();
+	localData = [localDataColumnNames].concat(localData.toRows());
 
-	const data2ColumnNames = data2.getColumnNames();
-	data2 = [data2ColumnNames].concat(data2.toRows());
+	const remoteDataColumnNames = remoteData.getColumnNames();
+	remoteData = [remoteDataColumnNames].concat(remoteData.toRows());
 
 	// To make those tables accessible to the library, we wrap them in daff.TableView.
-	var table1 = new daff.TableView(data1);
-	var table2 = new daff.TableView(data2);
+	var table1 = new daff.TableView(localData);
+	var table2 = new daff.TableView(remoteData);
 
 	// Compute the alignment between the rows and columns in the two tables.
 	var alignment = daff.compareTables(table1,table2).align();
@@ -56,7 +56,13 @@ async function main() {
 	diff2html.completeHtml(table_diff);
 	var table_diff_html = diff2html.html();
 
-	fs.writeFileSync("daff_viz/diff2_odc1_odc2.html", table_diff_html);
+	fs.writeFileSync(`daff/diff_viz/testDiff2_${local[0]}_${remote[0]}.html`, table_diff_html);
+
+	console.log("\nScript complete!\n");
+
+	if (process.argv[4]) {
+		console.log(`\nThe following was used as ancestor data: ${ancestor[0]}\n`);
+	}
 };
 
 main();

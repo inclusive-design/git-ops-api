@@ -2,43 +2,44 @@
 // Load data wrangling dependencies
 const dataForge = require("data-forge");
 require("data-forge-fs"); // For readFile/writeFile.
-const fs = require("fs"); // For saving results to a .html to visualize
-const utils = require("./utils");
+const fs = require("fs"); // For saving results to a .html to visualize.
 const daff = require("daff"); // Load diff algorithm dependencies.
 
-const ancestorRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_05_29.csv";
-const latestAncestorRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_08_20.csv";
-const latestRawURL = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/WeCount/assessment_centre_data_collection_2020_09_02.csv";
+// Load in Data
+let fileInputs = {};
+fileInputs[1] = ["A", "data/test_data/case3_Ancestor.csv"];
+fileInputs[2] = ["R", "data/test_data/case3_Remote.csv"];
+fileInputs[3] = ["L", "data/test_data/case3_Local.csv"];
+
+const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
+const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
+const ancestor = fileInputs[ process.argv[4] ? process.argv[4] : 1 ];
+
+let localData = dataForge.readFileSync( local[1] ).parseCSV();
+let remoteData = dataForge.readFileSync( remote[1] ).parseCSV();
+let ancestorData = dataForge.readFileSync( ancestor[1] ).parseCSV();
 
 async function main() {
 	// Load data from CSV files.
-
-	const ancestorDataString = await utils.getRemoteFileContent( ancestorRawURL);
-	const primaryDataString = await utils.getRemoteFileContent( latestAncestorRawURL );
-	const foreignDataString = await utils.getRemoteFileContent( latestRawURL );
-
-	let ancestorData = dataForge.fromCSV( ancestorDataString );
-	let data1 = dataForge.fromCSV( primaryDataString );
-	let data2 = dataForge.fromCSV( foreignDataString );
 
 	// Change data to row format to be used as inputs for daff's diff algorithm.
 	// Note: when data is changed to row format title row is excluded so it must be added manually.
 	const ancestorDataColumnNames = ancestorData.getColumnNames();
 	ancestorData = [ancestorDataColumnNames].concat(ancestorData.toRows());
 
-	const data1ColumnNames = data1.getColumnNames();
-	data1 = [data1ColumnNames].concat(data1.toRows());
+	const localDataColumnNames = localData.getColumnNames();
+	localData = [localDataColumnNames].concat(localData.toRows());
 
-	const data2ColumnNames = data2.getColumnNames();
-	data2 = [data2ColumnNames].concat(data2.toRows());
+	const remoteDataColumnNames = remoteData.getColumnNames();
+	remoteData = [remoteDataColumnNames].concat(remoteData.toRows());
 
 	// To make those tables accessible to the library, we wrap them in daff.TableView.
-	var table1 = new daff.TableView(data1);
-	var table2 = new daff.TableView(data2);
+	var table1 = new daff.TableView(localData);
+	var table2 = new daff.TableView(remoteData);
 	var ancestorTable = new daff.TableView(ancestorData);
 
 	// Compute the alignment between the rows and columns in the two tables.
-	var alignment = daff.compareTables3(ancestorTable,table1,table2).align();
+	var alignment = daff.compareTables3(ancestorTable, table1, table2).align();
 
 	// To produce a diff from the alignment, we first need a table for the output.
 	var data_diff = [];
@@ -51,6 +52,7 @@ async function main() {
 	flags.show_unchanged = true;
 	flags.show_unchanged_columns = true;
 	flags.show_unchanged_meta = true;
+	// flags.parent = process.argv[4] ? daff.TableView( ancestorData ) : null;
 	var highlighter = new daff.TableDiff(alignment,flags);
 	highlighter.hilite(table_diff);
 
@@ -63,7 +65,12 @@ async function main() {
 	diff2html.completeHtml(table_diff);
 	var table_diff_html = diff2html.html();
 
-	fs.writeFileSync("daff_viz/diff3_ODC1_ODC2_WeCount.html", table_diff_html);
-};
+	fs.writeFileSync(`daff/diff_viz/testDiff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
 
+	console.log("\nScript complete!\n");
+
+	if (process.argv[4]) {
+		console.log(`\nThe following was used as ancestor data: ${ancestor[0]}\n`);
+	}
+};
 main();
