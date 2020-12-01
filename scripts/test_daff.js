@@ -15,7 +15,7 @@ fileInputs[1] = ["ODC1", "https://raw.githubusercontent.com/inclusive-design/cov
 fileInputs[2] = ["ODC2", "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_08_20.csv"];
 fileInputs[3] = ["WeCount", "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/WeCount/assessment_centre_data_collection_2020_09_02.csv"];
 
-const local= fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
+const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
 const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
 const ancestor = fileInputs[ process.argv[4] ? process.argv[4] : 1 ];
 
@@ -105,12 +105,12 @@ async function main() {
 						};
 
 						// Add additional meta infomation.
-						let metaData = {}
-						metaData["rename"] = answersObject
-						metaData["from:"] = remoteData[1].split("/main/")[ remoteData[1].split("/main/").length - 1 ]
-						metaData["to:"] = localData[1].split("/main/")[ localData[1].split("/main/").length - 1 ]
-						metaData["include"] = []
-						metaData["exclude"] = []
+						let metaData = {};
+						metaData.rename = answersObject;
+						metaData["from:"] = remoteData[1].split("/main/")[ remoteData[1].split("/main/").length - 1 ];
+						metaData["to:"] = localData[1].split("/main/")[ localData[1].split("/main/").length - 1 ];
+						metaData.include = [];
+						metaData.exclude = [];
 
 						// Capture renaming choice for same tables in a separate JSON file.
 						fs.writeFileSync(`js/meta_${localData[0]}_${remoteData[0]}.json`, JSON.stringify(metaData, null, "\n") + "\n");

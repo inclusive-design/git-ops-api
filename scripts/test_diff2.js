@@ -60,9 +60,6 @@ async function main() {
 
 	console.log("\nScript complete!\n");
 
-	if (process.argv[4]) {
-		console.log(`\nThe following was used as ancestor data: ${ancestor[0]}\n`);
-	}
 };
 
 main();
