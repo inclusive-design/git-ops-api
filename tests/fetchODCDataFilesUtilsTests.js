@@ -162,13 +162,13 @@ jqUnit.test("Test fileNotExists()", function () {
 		},
 		existsAsFirst: {
 			message: "The file already exist - first file in alphabetical order",
-			filename: "responseWithCsv.html",
+			filename: "1.testfile",
 			directory: __dirname + "/data",
 			expected: false
 		},
 		existsAsLast: {
 			message: "The file already exist - last file in alphabetical order",
-			filename: "responseWithoutCsv.html",
+			filename: "z.testfile",
 			directory: __dirname + "/data",
 			expected: false
 		}
