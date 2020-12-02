@@ -17,9 +17,9 @@ Run `npm run lint` or `grunt lint` to lint.
 * Script: scripts/fetchODCDataFiles.js
 
 * Goal: Check if a new version of the open dataset documenting COVID-19 assessment centre locations has been published
-on the [Ontario Data Catalogue](https://data.ontario.ca/dataset/covid-19-assessment-centre-locations). If the dataset
-has been updated, this script downloads the file, updates the corresponding latest.json, and issues a pull request
-against the [COVID assessment centres data repository](https://github.com/inclusive-design/covid-assessment-centres/).
+on the [Ontario Data Catalogue API](https://data.ontario.ca/api/3/action/package_show?id=covid-19-assessment-centre-locations).
+If the dataset has been updated, this script downloads the file, updates the corresponding latest.json, and issues a
+pull request against the [COVID assessment centres data repository](https://github.com/inclusive-design/covid-assessment-centres/).
 
 * Prerequisites: Tasks below need to complete before running the script:
   * Define an environment variable `GITHUB_ACCOUNT_URL`: This variable defines the Github repository URL with an
@@ -30,4 +30,4 @@ An example: `https://{username}:{personal-access-token}@github.com/wecountprojec
 explained in the config file.
 
 * How to run:
-`node scripts/fetchODCDataFiles.js https://data.ontario.ca/dataset/covid-19-assessment-centre-locations ODC`
+`node scripts/fetchODCDataFiles.js`
