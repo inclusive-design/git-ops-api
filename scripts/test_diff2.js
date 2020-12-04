@@ -7,7 +7,7 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 */
 
 // This script tests diff2 algorithm in daff library and uses the data in data/test_data to do so.
-// This script takes two arguments Possible arguments are 1, 2, and 3. The data sets these numbers
+// This script takes two arguments. Possible arguments are 1, 2, and 3. The datasets these numbers
 // correspond to can be seen in line 29-31.
 //
 // Arguments:

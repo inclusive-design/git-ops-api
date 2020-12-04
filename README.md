@@ -36,12 +36,16 @@ explained in the config file.
 
 * Script: scripts/test_daff.js
 
-* Goal: This script runs a diffing algorithm and produces html that shows a visulization of the diff and optionally an updated local data set that is a result of mergeing in the diff results. The visuliztion can be seen by running the produced html file in a browser. This script takes three arguments maximum but needs at least two arugments minimum to run successfully. Possible arguments are 1, 2, and 3. Corresponding to temporarily hard-coded dataset files. In future implementation arguments will be user selected files.
+* Goal: This script runs a diffing algorithm and produces html that shows a visulization of the diff and optionally an
+updated local data set that is a result of mergeing in the diff results into the local file. The visuliztion can be seen
+by running the produced html file in a browser. This script takes three arguments maximum but needs at least two arugments
+minimum to run successfully. Possible arguments are 1, 2, and 3. Corresponding to temporarily hard-coded dataset files. In
+future implementation arguments will be user selected files.
 
 * Arguments:
-	- first argument: URL of local data
-	- second argument: URL of remote data
-	- third argument: URL of ancestor data
+  * first argument: URL of local data
+  * second argument: URL of remote data
+  * third argument: URL of ancestor data
 
 * How to run:
 `node scripts/test_daff.js 3 2 1`
@@ -50,11 +54,12 @@ explained in the config file.
 
 * Script: scripts/test_diff2.js
 
-* Goal: This script tests diff2 algorithm in daff library and uses the data in data/test_data to do so. This script takes two arguments Possible arguments are 1 and 2. Corresponding to temporarily hard-coded dataset files.
+* Goal: This script tests diff2 algorithm in daff library and uses the data in data/test_data to do so. This script takes
+two arguments. Possible arguments are 1 and 2. Corresponding to temporarily hard-coded dataset files.
 
 * Arguments:
-	- first argument: URL of local data
-	- second argument: URL of remote data
+  * first argument: URL of local data
+  * second argument: URL of remote data
 
 * How to run:
 `node scripts/test_daff.js 3 2`
@@ -63,12 +68,13 @@ explained in the config file.
 
 * Script: scripts/test_diff3.js
 
-* Goal: This script tests diff2 algorithm in daff library and uses the data in data/test_data to do so. This script takes three arguments maximum but needs at least two arugments minimum to run successfully. Possible arguments are 1, 2, and 3. Corresponding to temporarily hard-coded dataset files.
+* Goal: This script tests diff3 algorithm in daff library and uses the data in data/test_data to do so. This script takes
+three arguments. Possible arguments are 1, 2, and 3. Corresponding to temporarily hard-coded dataset files.
 
 * Arguments:
-	- first argument: URL of local data
-	- second argument: URL of remote data
-	- third argument: URL of ancestor data
+  * first argument: URL of local data
+  * second argument: URL of remote data
+  * third argument: URL of ancestor data
 
 * How to run:
 `node scripts/test_daff.js 3 2 1`

@@ -24,7 +24,7 @@ module.exports = {
 			return 0;
 		};
 
-		const numberOfLocalRows = localColumn.length
+		const numberOfLocalRows = localColumn.length;
 
 		localColumn = [...new Set(localColumn)];
 		remoteColumn = [...new Set(remoteColumn)];
