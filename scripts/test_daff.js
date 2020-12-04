@@ -1,9 +1,31 @@
+/*
+Copyright 2020 OCAD University
+
+Licensed under the New BSD license. You may not use this file except in compliance with this licence.
+You may obtain a copy of the BSD License at
+https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICENSE
+*/
+
+// This script runs a diffing algorithm and produces html that shows a visulization of the diff
+// and optionally an updated local data set that is a result of mergeing in the diff results.
+// The visuliztion can be seen by running the produced html file in a browser. This script takes
+// three arguments maximum but needs at least two arugments minimum to run successfully. Possible
+// arguments are 1, 2, and 3. The data sets these numbers correspond to can be seen in line 36-38.
+//
+// Arguments:
+// first argument: URL of local data
+// second argument: URL of remote data
+// third argument: URL of ancestor data
+//
+// A sample command that runs this script in the universal root directory:
+// node scripts/test_daff.js 3 2 1
+
 "use strict";
 // Load data wrangling dependencies
 const dataForge = require("data-forge");
 require("data-forge-fs"); // For readFile/writeFile.
 const fs = require("fs"); // For saving results to a .html to visualize
-const utils = require("./utils");
+const diffUtils = require("./diffUtils");
 const inquirer = require("inquirer");
 const _ = require("lodash");
 const daff = require("daff"); // Load diff algorithm dependencies.
@@ -21,9 +43,9 @@ const ancestor = fileInputs[ process.argv[4] ? process.argv[4] : 1 ];
 
 async function main() {
 	// Load data from CSV files.
-	const localDataString = await utils.getRemoteFileContent( local[1] );
-	const remoteDataString = await utils.getRemoteFileContent( remote[1] );
-	const ancestorDataString = await utils.getRemoteFileContent( ancestor[1] );
+	const localDataString = await diffUtils.getRemoteFileContent( local[1] );
+	const remoteDataString = await diffUtils.getRemoteFileContent( remote[1] );
+	const ancestorDataString = await diffUtils.getRemoteFileContent( ancestor[1] );
 
 	let localData = dataForge.fromCSV( localDataString );
 	let remoteData = dataForge.fromCSV( remoteDataString );
@@ -31,9 +53,9 @@ async function main() {
 
 	// Declare a similarityThreshold value that is a threshold of similarity scores to return if a given score is greater than the similarityThreshold value.
 	// Default similarityThreshold value is set to 20.
-	const similarityThreshold = process.argv[5] ? process.argv[5] : 20;
+	const similarityThreshold = process.argv[5] ? process.argv[5] : 0.2;
 
-	let similarityResults = utils.similarityResults( localData, remoteData, similarityThreshold );
+	let similarityResults = diffUtils.similarityResults( localData, remoteData, similarityThreshold );
 
 	let answersArray = [];
 	/**
@@ -54,7 +76,7 @@ async function main() {
 		let columnChoices = similarRemoteColumns.map(column => `${column.colName} (similarity score: ${column.simScore})`);
 		if (columnChoices.length || resultsArray.length < 2) {
 			// If local and remote dataset columns are the same or if they are differention versions of the same dataset skip to diffing step.
-			if (localData.getColumnNames().toString() === remoteData.getColumnNames() || localData[0].split(/([0-9]+)/)[0] === remoteData[0].split(/([0-9]+)/)[0] ) {
+			if (localData.getColumnNames().toString() === remoteData.getColumnNames() || local[0].split(/([0-9]+)/)[0] === remote[0].split(/([0-9]+)/)[0] ) {
 				columnChoices.length = 0;
 			};
 			columnQuestion.choices = columnChoices.length ? columnChoices.concat(["None"]) : ["continue to diff algorithm"];
@@ -79,7 +101,7 @@ async function main() {
 				// If there are more local columns to process move on to the next
 				if ( resultsArray.length > 1 && columnChoices.length) {
 					// Remove picked columns from similarity results array for all local columns
-					similarityResultsInput = utils.removePickedColumns( resultsArray, answer[localColumnName] );
+					similarityResultsInput = diffUtils.removePickedColumns( resultsArray, answer[localColumnName] );
 					daff_ui(similarityResultsInput);
 				} else {
 					if (columnChoices.length && answersArray.length ) {
@@ -107,13 +129,13 @@ async function main() {
 						// Add additional meta infomation.
 						let metaData = {};
 						metaData.rename = answersObject;
-						metaData["from:"] = remoteData[1].split("/main/")[ remoteData[1].split("/main/").length - 1 ];
-						metaData["to:"] = localData[1].split("/main/")[ localData[1].split("/main/").length - 1 ];
+						metaData["from:"] = remote[1].split("/main/")[ remote[1].split("/main/").length - 1 ];
+						metaData["to:"] = local[1].split("/main/")[ local[1].split("/main/").length - 1 ];
 						metaData.include = [];
 						metaData.exclude = [];
 
 						// Capture renaming choice for same tables in a separate JSON file.
-						fs.writeFileSync(`js/meta_${localData[0]}_${remoteData[0]}.json`, JSON.stringify(metaData, null, "\n") + "\n");
+						fs.writeFileSync(`data/meta_${local[0]}_${remote[0]}.json`, JSON.stringify(metaData, null, "\n") + "\n");
 
 						console.log("----FINAL ANSWERS-----");
 						console.log(answersObject);
@@ -123,8 +145,8 @@ async function main() {
 					}
 
 					// Print renamed column names in remote table.
-					// console.log("----- Final Column Names -----\n");
-					// console.log(remoteData.getColumnNames());
+					console.log("----- Final Column Names -----\n");
+					console.log(remoteData.getColumnNames());
 
 					// Change data to row format to be used as inputs for daff's diff algorithm.
 					// Note: when data is changed to row format title row is excluded so it must be added manually.
@@ -173,19 +195,19 @@ async function main() {
 					var table_diff_html = diff2html.html();
 
 					if (process.argv[4]) {
-						fs.writeFileSync(`daff_viz/diff3_${ancestor[0]}_${localData[0]}_${remoteData[0]}.html`, table_diff_html);
+						fs.writeFileSync(`daff/diff_viz/diff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
 						console.log(`\nYou have slected the following as ancestor data:\n${ancestor[0]}`);
 					} else {
-						fs.writeFileSync(`daff_viz/diff2_${localData[0]}_${remoteData[0]}.html`, table_diff_html);
+						fs.writeFileSync(`daff/diff_viz/diff2_${local[0]}_${remote[0]}.html`, table_diff_html);
 					}
-					console.log("\nCreated html to visualize daff! See 'daff_viz' folder.\n");
+					console.log("\nCreated html to visualize daff! See 'daff/diff_viz' folder.\n");
 
 					// Merge results of diff into local dataset
 					if (process.argv[4]) {
 						let mergeQuestion = {};
 						mergeQuestion.type = "confirm";
 						mergeQuestion.name = "merge";
-						mergeQuestion.message = `Do you want to merge in these diffing results into ${localData[0]}?`;
+						mergeQuestion.message = `Do you want to merge in these diffing results into ${local[0]}?`;
 						// mergeQuestion.default = false;
 						inquirer.prompt( mergeQuestion ).then( (answer) => {
 							if (answer.merge) {
@@ -200,8 +222,8 @@ async function main() {
 								let daff2CSV = new daff.Csv();
 								let mergedCSV = daff2CSV.renderTable( localTable );
 								console.log("\nMerge complete.");
-								console.log("\nA .csv file of the merge has been created in the 'daff_merge' folder.");
-								fs.writeFileSync(`daff_merge/diff3_merge_${ancestor[0]}_${localData[0]}_${remoteData[0]}.csv`, mergedCSV);
+								console.log("\nA .csv file of the merge has been created in the 'daff/merged_data' folder.");
+								fs.writeFileSync(`daff/merged_data/diff3_merge_${ancestor[0]}_${local[0]}_${remote[0]}.csv`, mergedCSV);
 							};
 						});
 					};
@@ -215,8 +237,8 @@ async function main() {
 	};
 
 	// Print initial column names in remote table.
-	// console.log("----- Initial Remote Column Names -----");
-	// console.log(remoteData.getColumnNames());
+	console.log("----- Initial Remote Column Names -----");
+	console.log(remoteData.getColumnNames());
 
 	console.log("\nSelect which columns are the same.\n");
 	daff_ui( similarityResults );

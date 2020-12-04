@@ -1,3 +1,22 @@
+/*
+Copyright 2020 OCAD University
+
+Licensed under the New BSD license. You may not use this file except in compliance with this licence.
+You may obtain a copy of the BSD License at
+https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICENSE
+*/
+
+// This script tests diff2 algorithm in daff library and uses the data in data/test_data to do so.
+// This script takes two arguments Possible arguments are 1, 2, and 3. The data sets these numbers
+// correspond to can be seen in line 29-31.
+//
+// Arguments:
+// first argument: URL of local data
+// second argument: URL of remote data
+//
+// A sample command that runs this script in the universal root directory:
+// node scripts/test_daff.js 3 2
+
 "use strict";
 // Load data wrangling dependencies
 const dataForge = require("data-forge");
