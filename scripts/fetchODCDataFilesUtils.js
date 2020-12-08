@@ -122,15 +122,26 @@ module.exports = {
 		process.exit(1);
 	},
 
-	// Clone the COVID data repository and push the new data file to a remote branch
-	prepareLocalRepo: async (covidDataRepoUrl, clonedLocalDir, wecountprojectRepoUrl) => {
+	/**
+	 * Clone the COVID data repository and the issuer account as a git remote
+	 * @param {String} covidDataRepoUrl - The URL of the data repo to clone
+	 * @param {String} clonedLocalDir - The name of the local directory that the data repo will be cloned to
+	 * @param {String} issuerRepoUrl - The Github repository URL with an embedded authenticated Github account
+ 	*  that pull requests will be issued on behalf
+	 */
+	prepareLocalRepo: async (covidDataRepoUrl, clonedLocalDir, issuerRepoUrl) => {
 		await git.clone(covidDataRepoUrl, clonedLocalDir)
 			.cwd(clonedLocalDir)
-			.addRemote("wecountproject", wecountprojectRepoUrl)
+			.addRemote("wecountproject", issuerRepoUrl)
 			.catch((err) => module.exports.exitWithError(err, clonedLocalDir));
 	},
 
-	// Clone the COVID data repository and push the new data file to a remote branch
+	/**
+	 * Push new data files to a remote branch
+	 * @param {String} branchName - The name of the remote branch
+	 * @param {String} publishedDate - The published date of the new data files. Used in the commit message
+	 * @param {String} clonedLocalDir - The name of the local directory that the data repo will be cloned to
+	 */
 	createRemoteBranch: async (branchName, publishedDate, clonedLocalDir) => {
 		await git.checkoutLocalBranch(branchName)
 			.add("./*")
@@ -139,17 +150,32 @@ module.exports = {
 			.catch((err) => module.exports.exitWithError("Error at pushing to a remote branch named " + branchName + ". Check either the authentication or whether the remote branch " + branchName + " already exists.\n" + err, clonedLocalDir));
 	},
 
-	issuePullRequest: async (githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate) => {
-		// Parse out the owner and repo name that the pull request will be issued for
+	/**
+	 * Issue pull request against the data repo on behalf of an issuer account
+	 * @param {String} githubAPI - The URL of the Github GraphQL API
+	 * @param {String} covidDataRepoUrl - The URL of the data repo that the pull request will be issued against
+	 * @param {String} issuerGithubId - The Github account that the pull request will be issued on behalf of
+	 * @param {String} issuerAccessToken - The personal access token of the Github account that the pull request will
+	 * be issued on behalf of
+	 * @param {String} branchName - The name of the remote branch
+	 * @param {String} publishedDate - The published date of the new data files. Used in the commit message
+	 * @return {String|Object} return the URL of the issued pull request when the pull request is issued successfully.
+	 * otherwise, return the error object in a structure of: {isError: true, message: detailed-error-message}
+	 */
+	issuePullRequest: async (githubAPI, covidDataRepoUrl, issuerGithubId, issuerAccessToken, branchName, publishedDate) => {
+		// Parse out the owner and repo name that the pull request will be issued against
 		const pattern = /https:\/\/github.com\/(.*)\/(.*).git/;
 		const matches = pattern.exec(covidDataRepoUrl);
+		const repoOwner = matches[1];
+		const repoName = matches[2];
+
 		const headers = {
-			"Authorization": "bearer " + accessToken
+			"Authorization": "bearer " + issuerAccessToken
 		};
 
 		const repoInfoResponse = await axios.post(githubAPI, {
 			query: `query {
-			repository(owner: "${matches[1]}", name: "${matches[2]}") {
+			repository(owner: "${repoOwner}", name: "${repoName}") {
 				url
 				id
 			}
@@ -165,7 +191,7 @@ module.exports = {
 			createPullRequest (
 				input: {
 					baseRefName:"main",
-					headRefName: "wecountproject:${branchName}",
+					headRefName: "${issuerGithubId}:${branchName}",
 					repositoryId: "${repoId}",
 					title: "Add a new ODC data file published on ${publishedDate}"
 				}) {

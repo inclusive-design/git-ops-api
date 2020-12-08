@@ -25,9 +25,9 @@ const rimraf = require("rimraf");
 const utils = require("./fetchODCDataFilesUtils.js");
 require("json5/lib/register");
 
-const wecountprojectRepoUrl = process.env.GITHUB_ACCOUNT_URL;
+const issuerRepoUrl = process.env.GITHUB_ACCOUNT_URL;
 
-if (!wecountprojectRepoUrl) {
+if (!issuerRepoUrl) {
 	console.log("Error: Please define an environment variable \"GITHUB_ACCOUNT_URL\" with a value of an authenticated Github account URL that will be used to create remote branches on behalf of this account.\n");
 	console.log("The command to define an temporary environment variable in a terminal: export GITHUB_ACCOUNT_URL={value}\n");
 	console.log("An example of the environment variable value: https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git");
@@ -46,10 +46,11 @@ const branchNameTemplate = config.branchNameTemplate;
 // The name of the temporary local directory for cloning the covid data repo locally
 const clonedLocalDir = "covid-data-repo";
 
-// Use regex to parse out the personal access token and the repo name embedded in the `wecountprojectRepoUrl`
-const re = /https:.*:(.*)@.*/;
-const matches = re.exec(wecountprojectRepoUrl);
-const accessToken = matches[1];
+// Use regex to parse out the personal access token and the repo name embedded in the `issuerRepoUrl`
+const re = /https:.*:(.*)@github.com\/(.*)\/.*/;
+const matches = re.exec(issuerRepoUrl);
+const issuerAccessToken = matches[1];
+const issuerGithubId = matches[2];
 
 // The main function
 async function main() {
@@ -68,7 +69,7 @@ async function main() {
 
 	// Clone the COVID data repo to local directory to check if the data file on the ODC website is new
 	console.log("Checking if a new data file is published on the ODC website: " + dataSourceUrl + "...");
-	await utils.prepareLocalRepo(covidDataRepoUrl, clonedLocalDir, wecountprojectRepoUrl);
+	await utils.prepareLocalRepo(covidDataRepoUrl, clonedLocalDir, issuerRepoUrl);
 
 	const dataFileDir = "./" + clonedLocalDir + "/" + dataDirInRepo + "/";
 	if (utils.fileNotExists(dataFileName, dataFileDir)) {
@@ -92,7 +93,7 @@ async function main() {
 		rimraf.sync(clonedLocalDir);
 
 		console.log("Issuing a pull request based off the remote branch...");
-		const pr = await utils.issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate);
+		const pr = await utils.issuePullRequest(githubAPI, covidDataRepoUrl, issuerGithubId, issuerAccessToken, branchName, publishedDate);
 		if (pr.isError) {
 			console.log("Error at issuing pull request: " + JSON.stringify(pr.message));
 			process.exit(1);
