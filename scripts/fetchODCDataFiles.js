@@ -94,7 +94,7 @@ async function main() {
 		console.log("Issuing a pull request based off the remote branch...");
 		const pr = await utils.issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate);
 		if (pr.isError) {
-			console.log("Error at issuing pull request: " + pr.message);
+			console.log("Error at issuing pull request: " + JSON.stringify(pr.message));
 			process.exit(1);
 		} else {
 			console.log("Done: A pull request with the new ODC data file has been issued at " + pr);
