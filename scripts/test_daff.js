@@ -194,13 +194,15 @@ async function main() {
 					diff2html.completeHtml(table_diff);
 					var table_diff_html = diff2html.html();
 
+					const diffDirectory = process.argv[4] ? "diff2" : "diff3";
+
 					if (process.argv[4]) {
-						fs.writeFileSync(`daff/diff_viz/diff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
+						fs.writeFileSync(`daff/diff3/diff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
 						console.log(`\nYou have slected the following as ancestor data:\n${ancestor[0]}`);
 					} else {
-						fs.writeFileSync(`daff/diff_viz/diff2_${local[0]}_${remote[0]}.html`, table_diff_html);
+						fs.writeFileSync(`daff/diff2/diff2_${local[0]}_${remote[0]}.html`, table_diff_html);
 					}
-					console.log("\nCreated html to visualize daff! See 'daff/diff_viz' folder.\n");
+					console.log(`\nCreated html to visualize daff! See 'daff/${diffDirectory}' folder.\n`);
 
 					// Merge results of diff into local dataset
 					if (process.argv[4]) {
@@ -223,7 +225,7 @@ async function main() {
 								let mergedCSV = daff2CSV.renderTable( localTable );
 								console.log("\nMerge complete.");
 								console.log("\nA .csv file of the merge has been created in the 'daff/merged_data' folder.");
-								fs.writeFileSync(`daff/merged_data/diff3_merge_${ancestor[0]}_${local[0]}_${remote[0]}.csv`, mergedCSV);
+								fs.writeFileSync(`daff/mergedData/diff3_merge_${ancestor[0]}_${local[0]}_${remote[0]}.csv`, mergedCSV);
 							};
 						});
 					};

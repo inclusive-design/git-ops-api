@@ -26,9 +26,9 @@ const daff = require("daff"); // Load diff algorithm dependencies.
 
 // Load in Data
 let fileInputs = {};
-fileInputs[1] = ["A", "data/test_data/case3_Ancestor.csv"];
-fileInputs[2] = ["R", "data/test_data/case3_Remote.csv"];
-fileInputs[3] = ["L", "data/test_data/case3_Local.csv"];
+fileInputs[1] = ["A", "daff/tests/data/testCase1/case1_Ancestor.csv"];
+fileInputs[2] = ["R", "daff/tests/data/testCase1/case1_Remote.csv"];
+fileInputs[3] = ["L", "daff/tests/data/testCase1/case1_Local.csv"];
 
 const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
 const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
@@ -46,11 +46,11 @@ async function main() {
 	remoteData = [remoteDataColumnNames].concat(remoteData.toRows());
 
 	// To make those tables accessible to the library, we wrap them in daff.TableView.
-	var table1 = new daff.TableView(localData);
-	var table2 = new daff.TableView(remoteData);
+	var localTable = new daff.TableView(localData);
+	var remoteTable = new daff.TableView(remoteData);
 
 	// Compute the alignment between the rows and columns in the two tables.
-	var alignment = daff.compareTables(table1,table2).align();
+	var alignment = daff.compareTables(localTable,remoteTable).align();
 
 	// To produce a diff from the alignment, we first need a table for the output.
 	var data_diff = [];
@@ -75,7 +75,10 @@ async function main() {
 	diff2html.completeHtml(table_diff);
 	var table_diff_html = diff2html.html();
 
-	fs.writeFileSync(`daff/diff_viz/testDiff2_${local[0]}_${remote[0]}.html`, table_diff_html);
+
+	const caseIndex = local[1].indexOf("case");
+	const Case = local[1].slice(caseIndex, caseIndex+5);
+	fs.writeFileSync(`daff/tests/diff2/${Case}/testDiff2_${local[0]}_${remote[0]}.html`, table_diff_html);
 
 	console.log("\nScript complete!\n");
 
