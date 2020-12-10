@@ -1,0 +1,7 @@
+All,R,L
+all,all,NULL
+remote,remote,NULL
+ancestor-remote,ancestor-remote,NULL
+remote-local,remote-local,NULL
+local,NULL,local
+remote-local,NULL,remote-local

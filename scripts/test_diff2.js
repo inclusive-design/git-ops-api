@@ -26,9 +26,9 @@ const daff = require("daff"); // Load diff algorithm dependencies.
 
 // Load in Data
 let fileInputs = {};
-fileInputs[1] = ["A", "daff/tests/data/testCase1/case1_Ancestor.csv"];
-fileInputs[2] = ["R", "daff/tests/data/testCase1/case1_Remote.csv"];
-fileInputs[3] = ["L", "daff/tests/data/testCase1/case1_Local.csv"];
+fileInputs[1] = ["A", "daff/tests/data/testCase5/case5Ancestor.csv"];
+fileInputs[2] = ["R", "daff/tests/data/testCase5/case5Remote.csv"];
+fileInputs[3] = ["L", "daff/tests/data/testCase5/case5Local.csv"];
 
 const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
 const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
@@ -76,9 +76,9 @@ async function main() {
 	var table_diff_html = diff2html.html();
 
 
-	const caseIndex = local[1].indexOf("case");
-	const Case = local[1].slice(caseIndex, caseIndex+5);
-	fs.writeFileSync(`daff/tests/diff2/${Case}/testDiff2_${local[0]}_${remote[0]}.html`, table_diff_html);
+	const caseIndex = local[1].indexOf("ase");
+	const Case = local[1].slice(caseIndex, caseIndex + 4);
+	fs.writeFileSync(`daff/tests/diff2/testC${Case}/testDiff2_${local[0]}_${remote[0]}.html`, table_diff_html);
 
 	console.log("\nScript complete!\n");
 

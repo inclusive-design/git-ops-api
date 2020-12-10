@@ -1,4 +1,4 @@
-# Diff3 Case 1
+# Diff2 Case 1
 
 Test daff without preprocessing and postprocessing. All 3 files have their
 own columns/rows and common columns/rows.
@@ -11,5 +11,4 @@ own columns/rows and common columns/rows.
 
 ## Output file
 
-* `daff/tests/diff3/testCase1/testDiff3_A_L_R.html`
-* `daff/tests/mergedData/testCase1/diff3_merge_A_L_R.csv`
+* `daff/tests/diff2/testCase1/testDiff2_L_R.html`

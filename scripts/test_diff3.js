@@ -27,9 +27,9 @@ const daff = require("daff"); // Load diff algorithm dependencies.
 
 // Load in Data
 let fileInputs = {};
-fileInputs[1] = ["A", "data/test_data/case3_Ancestor.csv"];
-fileInputs[2] = ["R", "data/test_data/case3_Remote.csv"];
-fileInputs[3] = ["L", "data/test_data/case3_Local.csv"];
+fileInputs[1] = ["A", "daff/tests/data/testCase5/case5Ancestor.csv"];
+fileInputs[2] = ["R", "daff/tests/data/testCase5/case5Remote.csv"];
+fileInputs[3] = ["L", "daff/tests/data/testCase5/case5Local.csv"];
 
 const local = fileInputs[ process.argv[2] ? process.argv[2] : 1 ];
 const remote = fileInputs[ process.argv[3] ? process.argv[3] : 2 ];
@@ -85,8 +85,9 @@ async function main() {
 	diff2html.completeHtml(table_diff);
 	var table_diff_html = diff2html.html();
 
-	const Case = local[1]
-	fs.writeFileSync(`daff/tests/diff3/${Case}/diff_viz/testDiff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
+	const caseIndex = local[1].indexOf("ase");
+	const Case = local[1].slice(caseIndex, caseIndex + 4);
+	fs.writeFileSync(`daff/tests/diff3/testC${Case}/testDiff3_${ancestor[0]}_${local[0]}_${remote[0]}.html`, table_diff_html);
 
 	console.log("\nScript complete!\n");
 
@@ -99,6 +100,6 @@ async function main() {
 	merged.apply();
 	let daff2CSV = new daff.Csv();
 	let mergedCSV = daff2CSV.renderTable( localTable );
-	fs.writeFileSync(`daff/tests/mergedData/${Case}/diff3_merge_${ancestor[0]}_${local[0]}_${remote[0]}.csv`, mergedCSV);
+	fs.writeFileSync(`daff/tests/mergedData/testC${Case}/diff3_merge_${ancestor[0]}_${local[0]}_${remote[0]}.csv`, mergedCSV);
 };
 main();

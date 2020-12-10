@@ -1,0 +1,7 @@
+all,all,NULL
+remote,remote,NULL
+R,All,L
+remote-local,remote-local,NULL
+NULL,all,all
+NULL,local,local
+NULL,remote-local,remote-local

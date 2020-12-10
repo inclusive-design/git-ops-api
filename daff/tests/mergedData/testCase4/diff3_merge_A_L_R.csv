@@ -1,0 +1,6 @@
+All.1,All.2,All.3,R,R-L,L,R-L
+all*,all@,all,all,all,all,all
+remote,remote,remote,remote,remote,NULL,NULL
+remote-local,remote-local,remote-local,remote-local,remote-local,NULL,NULL
+local,local,local,NULL,NULL,local,local
+remote-local,remote-local,remote-local,NULL,NULL,remote-local,remote-local
