@@ -1,0 +1,6 @@
+all-edit-remote,all-edit-remote,all,all,NULL,NULL
+remote,remote,remote,remote,NULL,NULL
+All.1,All.2,R,R-L,L,R-L
+remote-local,remote-local,remote-local,remote-local,NULL,NULL
+local,local,NULL,NULL,local,local
+remote-local,remote-local,NULL,NULL,remote-local,remote-local
