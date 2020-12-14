@@ -26,7 +26,7 @@ require("data-forge-fs");
 const fs = require("fs");
 const daff = require("daff"); // Load diff algorithm dependencies.
 
-if (!process.argv[2] || !process.argv[3] || !process.argv[4 || !process.argv[5] || !process.argv[6]]) {
+if (!process.argv[2] || !process.argv[3] || !process.argv[4] || !process.argv[5] || !process.argv[6]) {
 	console.log("\nPlease enter all necessary arguments. \nRefer to docs in script if need be.\n");
 	return;
 }
@@ -95,7 +95,6 @@ async function main() {
 
 	// Merge results of diff into local dataset
 	let merged = new daff.Merger( ancestorTable, localTable, remoteTable, flags);
-	merged.apply();
 	console.log("------------------------------------------");
 	console.log( "\nNumber of merge conflicts", merged.apply() );
 	console.log("------------------------------------------");

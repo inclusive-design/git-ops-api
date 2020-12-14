@@ -74,15 +74,25 @@ out to contain the same information. These columns will be called R-L.
 
 ### Case 4
 
-Tests compound primary keys by creating multiple columns that exist in all files (ancestor, locale remote). Checks
+Tests compound primary keys by creating multiple columns that exist in all files (ancestor, local remote). Checks
 if daff is able to accurately capture row mapping when using multiple primary keys. If it does, manually calculating
 row similarity should not be required.
 
 ### Case 5
 
-Test if compound primary keys for R-L columns can accurately capture row mapping for
-remote-local rows. If it does, manually calculating row similarity should not be required.
-Also test minimum number of compound primary keys.
+Test if compound R-L columns can accurately capture row mapping for remote-local rows. If it does, manually
+calculating row similarity should not be required. Also test the minimum number of compound primary keys needed and
+what errors take place when all compound primary key values are updated.
+
+### Case 6
+
+Test what errors take place when all compound primary key values and cell values for rows found in all 3 files for
+columns only found in ancestor file and local file are updated in the local file.
+
+### Case 7
+
+Test special case where the expected output will be produced. In this special case, rows found in both ancestor and
+local files will not be removed.
 
 ### Conclusion
 
@@ -93,7 +103,8 @@ Diff2 works as expected.
 
 Diff3 output has these issues
 
-* Issue 1 - Deletion of columns/rows found in both ancestor and local files but not remote file
-* Issue 2 - Handling conflicts of columns/rows found in both remote and local files but not ancestor file
-* Issue 3 - When all values in compound primary key columns/row are changed.
-* Issue 4 - Duplicate of row that is found in all three files
+* Issue 1 - Deletion of columns/rows found in both ancestor and local files but not remote file. Relevant in all test cases.
+* Issue 2 - Handling conflicts of columns/rows found in both remote and local files but not ancestor file. Relevant in test
+cases 3, 4, 5, and 6.
+* Issue 3 - When all values in compound primary key columns/row are changed. Relavant in test case 5.
+* Issue 4 - Duplicate of row that is found in all three files. Relevant in test case 6.

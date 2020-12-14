@@ -34,6 +34,10 @@ if (!process.argv[2] || !process.argv[3] || !process.argv[4]) {
 	return;
 }
 
+if ((process.argv[5] < 0) || (process.argv[5] > 1)) {
+	console.log("\nPlease enter a number between 0 and 1 for the fourth argument \nRefer to docs in script if need be.\n");
+	return;
+}
 // Load in Data
 const local = process.argv[2];
 const remote = process.argv[3];

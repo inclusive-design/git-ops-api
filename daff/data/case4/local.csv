@@ -1,5 +1,5 @@
 All,All,All,L,A-L,R-L
-all,all-edit-local,all,all,all,all
+all-edit-local,all,all,all,all,all
 local,local,local,local,local,local
 ancestor-local,ancestor-local,ancestor-local,ancestor-local,ancestor-local,ancestor-local
 remote-local,remote-local,remote-local,remote-local,remote-local,remote-local
