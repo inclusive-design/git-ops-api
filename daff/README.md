@@ -11,7 +11,7 @@
 **calcColumnSimilarity.js** - This script completes preproccessing steps for `diff2.js`/`diff3.js` and produces meta data
 for its given input data files.
 
-* How to run
+* How to run:
 
   * For diff2:
 ```node calcColumnSimilarity.js local.csv remote.csv```
@@ -72,19 +72,23 @@ file doesn’t care about from the ancestor and remote files.
 
 **Goal:** Test diffing output of diff2 and diff3.
 
-**Result:** The output is what the WeCount accessibility map would expect besides the pending issues.
+**Result:** The output is what the WeCount accessibility map would expect besides the issue 1.
 
 **Relevant Issues:** 1
 
 ### Case 3
 
+Goal:
+
+Result:
+
 **Prerequisite:** Assume that the preprocessing been completed. This preprocessing removes columns that the local
-file doesn’t care about from the ancestor and remote files. Assume local and remote files independently add
-a column that turns out to contain the same information.
+file doesn’t care about from the ancestor and remote files.
 
-**Goal:** Test diffing output of diff2 and diff3.
+**Goal:** When local and remote files independently add the same column that contains the same information, find
+out if the daff library is able to identify them as the same column.
 
-**Result:** The output is what the WeCount accessibility map would expect besides the pending issues.
+**Result:** No, these columns are identified as separate columns and the daff doesn't report any conflict.
 
 **Relevant Issues:** 1, 2
 
@@ -143,12 +147,12 @@ file doesn’t care about from the ancestor and remote files. Assume local and r
 a column that turns out to contain the same information. Assume there are 2 columns that exist in all 3 (ancestor,
 local remote) files. In the local file assume cells that are found in only ancestor and local files are edited.
 
-**Goal:** Highlight a case were row issue 1 does not occur.
+**Goal:** Highlight a case where row issue 1 does not occur.
 
 **Result:** Row issue 1 does not occur. The output is what the WeCount accessibility map would expect besides the
-pending issues 2 and column issue 1.
+issues 2 and column issue 1.
 
-**Relevant Issues:** 1, 2, 5 (column 5 is row issue 1 not occuring)
+**Relevant Issues:** 1, 2, 5
 
 ## Conclusion
 
@@ -170,7 +174,7 @@ found in both ancestor and local files.
 **Proposed Solution:** Provide an option to users to decide if they wanna take the ownership of columns/rows found
 in both ancestor and local files but not remote file by retaining it or removing it.
 
-**Relevant Cases:** Relevant in all test cases due to all cases possessing A-L column and ancestor-local row.
+**Relevant Cases:** Relevant in all cases due to all cases possessing A-L column and ancestor-local row.
 
 ### Issue 2
 
@@ -183,7 +187,7 @@ one marked in green (from remote file), the other marked in white (from local fi
 **Proposed Solution:** Give user options to merge them or keep one of the columns/rows. Use the column/row from the
 local file as the base and update corresponding values with what have been changed in the remote file.
 
-**Relevant Cases:** Relevant in test cases 3, 4, 5, 6 and 7 due to those cases possessing R-L column and remote-local row.
+**Relevant Cases:** Relevant in cases 3, 4, 5, 6 and 7 due to those cases possessing R-L column and remote-local row.
 
 ### Issue 3
 
@@ -197,7 +201,7 @@ removed.
 **Proposed Solution:** Give user options to merge them or keep one of the rows. Use the all rows from the remote file or
 the local file as the base and update corresponding values from that row using values in the other file.
 
-**Relevant Cases:** Relevant in test case 5.
+**Relevant Cases:** Relevant in case 5.
 
 ### Issue 4
 
@@ -209,11 +213,11 @@ in the diff output.
 **Proposed Solution:** Give user options to merge them or keep one of the rows. Use the all rows from the remote file
 or the local file as the base and update corresponding values from that row using values in the other file.
 
-**Relevant Cases:** Relevant in test case 6.
+**Relevant Cases:** Relevant in case 6.
 
 ### Issue 5
 
-Absence of row issue 1.
+Issue 5 is absence of row issue 1. In all cases this issue occurs except case 7.
 
 **Interpretation:**  Rows found in only ancestor and local files will not be removed. Instead the row will be marked in
 white and remain in the table.
@@ -221,4 +225,4 @@ white and remain in the table.
 **Proposed Solution:** Provide an option to users to decide if they wanna take the ownership of rows found in only
 ancestor and local files by retaining it or removing it.
 
-**Relevant Cases:** Relevant in test case 7.
+**Relevant Cases:** Relevant in case 7.

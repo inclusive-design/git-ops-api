@@ -14,10 +14,10 @@ const axios = require("axios");
 
 module.exports = {
 	/**
-	 * Find the number of unique intersected values between two columns.
+	 * Find the portion of unique intersected values between two columns.
 	 * @param {Column} localColumn - Column from data set to compare.
 	 * @param {Column} remoteColumn - Column from data set to compare.
-	 * @return {Number} - Integer of number of items in the intersection.
+	 * @return {Number} - Number between 0 and 1 representing the percentage of items in the intersection.
 	 */
 	inclusion: function (localColumn, remoteColumn) {
 		if (localColumn.length === 0 || remoteColumn.length === 0) {
