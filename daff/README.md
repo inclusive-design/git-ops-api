@@ -150,7 +150,7 @@ pending issues 2 and column issue 1.
 
 **Relevant Issues:** 1, 2, 5 (column 5 is row issue 1 not occuring)
 
-### Conclusion
+## Conclusion
 
 Refer to detailed evaluation process and results in [Daff Issue Summary document](https://docs.google.com/document/d/1GlKs9KH3ujwLzuBomwUnA6xcBWsYdZ22cWgSqIiKAfk/edit#)
 document.
@@ -159,7 +159,7 @@ Diff2 works as expected.
 
 Diff3 output has these issues
 
-#### Issue 1
+### Issue 1
 
 Diff output removes columns/rows found in only ancestor and local files.
 
@@ -172,7 +172,7 @@ in both ancestor and local files but not remote file by retaining it or removing
 
 **Relevant Cases:** Relevant in all test cases due to all cases possessing A-L column and ancestor-local row.
 
-#### Issue 2
+### Issue 2
 
 When both the remote and the local tables add a column/row that contain the same information, daff treats them as
 separate columns/rows.
@@ -185,7 +185,7 @@ local file as the base and update corresponding values with what have been chang
 
 **Relevant Cases:** Relevant in test cases 3, 4, 5, 6 and 7 due to those cases possessing R-L column and remote-local row.
 
-#### Issue 3
+### Issue 3
 
 If all the compound primary key cells are edited in the remote file, then the row containing compound primary key cells
 from the remote file is added in the diff output. The cell values for columns that are not in the remote file for this row
@@ -199,7 +199,7 @@ the local file as the base and update corresponding values from that row using v
 
 **Relevant Cases:** Relevant in test case 5.
 
-#### Issue 4
+### Issue 4
 
 Duplicate of row that is found in all three files.
 
@@ -211,7 +211,7 @@ or the local file as the base and update corresponding values from that row usin
 
 **Relevant Cases:** Relevant in test case 6.
 
-#### Issue 5
+### Issue 5
 
 Absence of row issue 1.
 
