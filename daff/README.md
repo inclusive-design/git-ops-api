@@ -1,34 +1,25 @@
 # Directory Contents
 
-**diff2/** - This folder contains html diff2 table output of `diff2.js` script.
+**data/** - This folder contains input files for diff scripts and results of runinng test cases.
 
-**diff3/** - This folder contains html diff3 table output of `diff3.js` script.
-
-**mergedData/** - This folder contains updated local file after having diff changes merged in. It is an output of `diff3.js`.
-
-**data/** - This folder contains input files for diff scripts, metadata of input files and results of runinng test cases.
-
-**calcColumnSimilarity.js** - This script completes preproccessing steps for `diff2.js`/`diff3.js` and produces meta data
+**calcColumnSimilarity.js** - This script completes preproccessing steps for `diff2.js`/`diff3.js` and produces metadata
 for its given input data files.
 
 * How to run:
 
-  * For diff2:
-```node calcColumnSimilarity.js local.csv remote.csv```
+  * with default column similarity threshold of 20%:
+```node calcColumnSimilarity.js local.csv remote.csv metadata_local_remote.json```
 
-  * For diff3:
-```node calcColumnSimilarity.js ancestor.csv local.csv remote.csv```
-
-  * For diff3 with custom column similarity threshold:
-```node calcColumnSimilarity.js ancestor.csv local.csv remote.csv 0.5```
+  * with custom column similarity threshold:
+```node calcColumnSimilarity.js local.csv remote.csv metadata_local_remote.json 0.5```
 
 * Output file:
-```node data/meta_local_remote.json```
+```meta_local_remote.json```
 
 **diff2.js** - This script runs diff2 for two given input data files and outputs a visualization of the diff in an html file.
 
 * How to run:
-```node diff2.js local.csv remote.csv```
+```node diff2.js local.csv remote.csv diff2_local_remote.html```
 
 * Output file:
 ```diff2/diff2_local_remote.html```
@@ -37,24 +28,25 @@ for its given input data files.
 in an html file and a updated local file after having diff changes merged in.
 
 * How to run:
-```node diff3.js local.csv remote.csv```
+```node diff3.js ancestor.csv local.csv remote.csv diff3_ancestor_local_remote.html diff3_merged.csv```
 
 * Output file:
-  * ```mergedData/merged_ancestor_local_remote.html```
-  * ```mergedData/merged_ancestor_local_remote.html```
+  * ```diff3_ancestor_local_remote.html```
+  * ```diff3_merged.csv```
 
 ## Test Cases
 
-All test case directories contain the same input data files:
+All test case directories contain the same input data files except for case 8:
 
 * `ancestor.csv`
 * `local.csv`
 * `remote.csv`
 
-All test cases generate same set of output files:
+All test cases generate same set of output files except for case 8:
 
 * `diff2_local_remote.html`
 * `diff3_ancestor_local_remote.html`
+* `diff3_merged.csv`
 
 ### Case 1
 
@@ -154,9 +146,25 @@ issues 2 and column issue 1.
 
 **Relevant Issues:** 1, 2, 5
 
+### Case 8
+
+**Prerequisite:** Assume that the preprocessing has been completed. This preprocessing removes columns that the local
+file doesn’t care about from remote file. Assume local and remote files independently add a column
+that turns out to contain the same information. Assume columns that the local and remote files have in common are named
+differntly in each file. This case uses the local and remote files from case 3 but with the All column and the R-L
+column renamed differently in the remote file.
+
+**Goal:** Rename columns in the remote file that are also in local file. Name these columns according to the names given
+to them in the local file using `calcColumnSimilarity.js`.
+
+**Result:** Columns in the remote file are renamed according to local file column names. Outputs a metadata file containing
+information on the column name mapping between the local and remote files.
+
+**Relevant Issues:** N/A
+
 ## Conclusion
 
-Refer to detailed evaluation process and results in [Daff Issue Summary document](https://docs.google.com/document/d/1GlKs9KH3ujwLzuBomwUnA6xcBWsYdZ22cWgSqIiKAfk/edit#)
+Refer to detailed evaluation process and results in [Daff Issue Summary document](https://docs.google.com/document/d/1GlKs9KH3ujwLzuBomwUnA6xcBWsYdZ22cWgSqIiKAfk/edit?usp=sharing)
 document.
 
 Diff2 works as expected.

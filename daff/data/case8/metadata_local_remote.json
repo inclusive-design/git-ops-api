@@ -1,0 +1,20 @@
+{
+
+"rename": {
+
+
+"This column is in local file | All": "All",
+
+
+"This column is in local file | R-L": "R-L"
+
+},
+
+"from:": "daff/data/case8/remote.csv",
+
+"to:": "daff/data/case8/local.csv",
+
+"include": [],
+
+"exclude": []
+}

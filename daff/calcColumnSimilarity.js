@@ -17,8 +17,9 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 // fourth argument(optional): a number from 0 to 1 reprenting percentage of identical values existing between two columns
 // for the two columns to be considered similar.
 //
-// A sample command that runs this script in the universal root directory:
-// node daff/calcColumnSimilarity.js daff/data/local.csv daff/data/remote.csv daff/data/metadata_local_remote.json
+// Sample commands that runs this script in the universal root directory:
+// node daff/calcColumnSimilarity.js daff/data/case8/local.csv daff/data/case8/remote.csv daff/data/case8/metadata_local_remote.json
+// node daff/calcColumnSimilarity.js daff/data/case8/local.csv daff/data/case8/remote.csv daff/data/case8/metadata_local_remote.json 0.5
 
 "use strict";
 // Load data wrangling dependencies
@@ -42,16 +43,18 @@ if ((process.argv[5] < 0) || (process.argv[5] > 1)) {
 const local = process.argv[2];
 const remote = process.argv[3];
 
-// const local = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/WeCount/assessment_centre_data_collection_2020_09_02.csv"
-// const remote = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_08_20.csv"
+// Comment out to load data from Github URLs.
+let localData = dataForge.readFileSync( local ).parseCSV();
+let remoteData = dataForge.readFileSync( remote ).parseCSV();
 
 async function main() {
-	// Load data from CSV files.
-	const localDataString = await diffUtils.getRemoteFileContent( local );
-	const remoteDataString = await diffUtils.getRemoteFileContent( remote );
-
-	let localData = dataForge.fromCSV( localDataString );
-	let remoteData = dataForge.fromCSV( remoteDataString );
+	// Uncomment to load data from Github URLs.
+	// const local = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/WeCount/assessment_centre_data_collection_2020_09_02.csv"
+	// const remote = "https://raw.githubusercontent.com/inclusive-design/covid-assessment-centres/main/ODC/assessment_centre_locations_2020_08_20.csv"
+	// const localDataString = await diffUtils.getRemoteFileContent( local );
+	// const remoteDataString = await diffUtils.getRemoteFileContent( remote );
+	// let localData = dataForge.fromCSV( localDataString );
+	// let remoteData = dataForge.fromCSV( remoteDataString );
 
 	// Declare a similarityThreshold value that is a threshold of similarity scores to return if a given score is greater than the similarityThreshold value.
 	// Default similarityThreshold value is set to 0.2.
@@ -78,7 +81,9 @@ async function main() {
 		let columnChoices = similarRemoteColumns.map(column => `${column.colName} (similarity score: ${column.simScore})`);
 		if (columnChoices.length || resultsArray.length < 2) {
 			// If local and remote dataset columns are the same or if they are differention versions of the same dataset skip to diffing step.
-			if (localData.getColumnNames().toString() === remoteData.getColumnNames() || local.split("/")[local.split("/").length - 2] === remote.split("/")[remote.split("/").length - 2] ) {
+			const localDataDirectory = local.split("/")[local.split("/").length - 2];
+			const remoteDataDirectory = remote.split("/")[remote.split("/").length - 2];
+			if ((localData.getColumnNames().toString() === remoteData.getColumnNames() || localDataDirectory === remoteDataDirectory) && localDataDirectory.toLowerCase().slice(0,4) !== "case" ) {
 				columnChoices.length = 0;
 			};
 			columnQuestion.choices = columnChoices.length ? columnChoices.concat(["None"]) : ["continue to diff algorithm"];
@@ -101,7 +106,7 @@ async function main() {
 				};
 
 				// If there are more local columns to process move on to the next
-				if ( resultsArray.length > 1 && columnChoices.length) {
+				if ( resultsArray.length > 0 && columnChoices.length) {
 					// Remove picked columns from similarity results array for all local columns
 					similarityResultsInput = diffUtils.removePickedColumns( resultsArray, answer[localColumnName] );
 					daff_ui(similarityResultsInput);
@@ -111,21 +116,13 @@ async function main() {
 						let answersObject = Object.assign(...answersArray);
 
 						// Rename columns.
-						if (local.split("/")[local.split("/").length - 2] !== "WeCount") {
-							localData = localData.renameSeries( answersObject );
-						} else {
-							// Invert similarityAnswers object's keys and values so the remote column names are keys and local column names are values.
-							// This format is needed for renameSeries() method.
-							answersObject = _.invert(answersObject);
-							remoteData = remoteData.renameSeries( answersObject );
-						}
+						// Invert similarityAnswers object's keys and values so the remote column names are keys and local column names are values.
+						// This format is needed for renameSeries() method.
+						answersObject = _.invert(answersObject);
+						remoteData = remoteData.renameSeries( answersObject );
 
-						for (let [fCol, pCol] of Object.entries(answersObject)) {
-							if ( fCol !== "None" && local.split("/")[local.split("/").length - 2] === "WeCount" ) {
-								console.log(`The column "${fCol}" is renamed to "${pCol}"`);
-							} else {
-								console.log(`The column "${pCol}" is renamed to "${fCol}"`);
-							};
+						for (let [remoteColumnName, localColumnName] of Object.entries(answersObject)) {
+							console.log(`The column "${remoteColumnName}" is renamed to "${localColumnName}"`);
 						};
 
 						// Add additional meta infomati
@@ -148,7 +145,7 @@ async function main() {
 					}
 
 					// Print renamed column names in remote table.
-					console.log("\n----- Final Column Names -----");
+					console.log("\n----- Final Remote Column Names -----");
 					console.log(remoteData.getColumnNames());
 				};
 			});

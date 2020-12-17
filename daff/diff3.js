@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 // fifth argument: location to output the updated local file with merged changes
 //
 // A sample command that runs this script in the universal root directory:
-// node daff/diff3.js daff/data/case1/ancestor.csv daff/data/case1/local.csv daff/data/case1/remote.csv diff3_ancestor_local_remote.html diff3_merged.csv
+// node daff/diff3.js daff/data/case1/ancestor.csv daff/data/case1/local.csv daff/data/case1/remote.csv daff/data/case1/diff3_ancestor_local_remote.html daff/data/case1/diff3_merged.csv
 
 "use strict";
 // Load data wrangling dependencies
