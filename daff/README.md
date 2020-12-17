@@ -70,10 +70,6 @@ file doesn’t care about from the ancestor and remote files.
 
 ### Case 3
 
-Goal:
-
-Result:
-
 **Prerequisite:** Assume that the preprocessing been completed. This preprocessing removes columns that the local
 file doesn’t care about from the ancestor and remote files.
 
@@ -157,8 +153,8 @@ column renamed differently in the remote file.
 **Goal:** Rename columns in the remote file that are also in local file. Name these columns according to the names given
 to them in the local file using `calcColumnSimilarity.js`.
 
-**Result:** Columns in the remote file are renamed according to local file column names. Outputs a metadata file containing
-information on the column name mapping between the local and remote files.
+**Result:** Columns in the remote file are renamed according to local file column names. A metadata file containing
+information on the column name mapping between the local and remote files is outputed.
 
 **Relevant Issues:** N/A
 
