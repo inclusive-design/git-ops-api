@@ -12,8 +12,11 @@
 	// The central COVID-19 data repository on Github
 	covidDataRepoUrl: "https://github.com/inclusive-design/covid-assessment-centres.git",
 
-	// Github GraphQL API for programmatically issuing pull requests
-	githubAPI: "https://api.github.com/graphql",
+	// Github REST API
+	githubRestAPI: "https://api.github.com/",
+
+	// Github GraphQL API
+	githubGraphqlAPI: "https://api.github.com/graphql",
 
 	// The template of latest.json in the COVID-19 data repository. All template variables have a prefix of `$`
 	latestFileTemplate: "{\n\t\"fileName\": \"$filename\"\n}\n",

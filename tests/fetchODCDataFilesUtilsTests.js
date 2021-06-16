@@ -150,36 +150,6 @@ jqUnit.test("Test isValidDate()", function () {
 	});
 });
 
-// ****************** Test fileNotExists() ******************
-
-jqUnit.test("Test fileNotExists()", function () {
-	const testCases = {
-		nonexistent: {
-			message: "The file doesn't exist",
-			filename: "nonexistent.file",
-			directory: __dirname + "/data",
-			expected: true
-		},
-		existsAsFirst: {
-			message: "The file already exist - first file in alphabetical order",
-			filename: "1.testfile",
-			directory: __dirname + "/data",
-			expected: false
-		},
-		existsAsLast: {
-			message: "The file already exist - last file in alphabetical order",
-			filename: "z.testfile",
-			directory: __dirname + "/data",
-			expected: false
-		}
-	};
-
-	jqUnit.expect(3);
-	fluid.each(testCases, function (oneCase) {
-		jqUnit.assertEquals(oneCase.message, oneCase.expected, utils.fileNotExists(oneCase.filename, oneCase.directory));
-	});
-});
-
 //****************** Test downloadDataFile() ******************
 
 const downloadDataFileTestCases = {
