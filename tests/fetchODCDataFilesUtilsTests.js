@@ -12,7 +12,6 @@ const fluid = require("infusion");
 const jqUnit = fluid.require("node-jqunit", require, "jqUnit");
 const fs = require("fs");
 const nock = require("nock");
-const rimraf = require("rimraf");
 
 const utils = require("../scripts/fetchODCDataFilesUtils.js");
 
@@ -159,9 +158,7 @@ const downloadDataFileTestCases = {
 			status: 200,
 			response: "test file content"
 		},
-		fileExists: true,
-		response: true,
-		targetFileLocation: __dirname + "/data/temp.txt"
+		response: "test file content"
 	},
 	downloadFail: {
 		message: "Unable to download the file content",
@@ -169,28 +166,19 @@ const downloadDataFileTestCases = {
 			status: 400,
 			response: undefined
 		},
-		fileExists: false,
 		response: {
 			isError: true
-		},
-		targetFileLocation: __dirname + "/data/temp.txt"
+		}
 	}
 };
 
 fluid.each(downloadDataFileTestCases, function (oneCase, key) {
 	jqUnit.test("Test downloadDataFile() - " + key, function () {
-		jqUnit.expect(2);
+		jqUnit.expect(1);
 		// setup nock to mock the response from the data source
 		nock(odsHostname).get(odsPath).reply(oneCase.nockConfig.status, oneCase.nockConfig.response);
 
-		return utils.downloadDataFile(fullSitePath, oneCase.targetFileLocation).then(function (res) {
-			if (oneCase.fileExists) {
-				const resultContent = fs.readFileSync(oneCase.targetFileLocation, "utf8");
-				jqUnit.assertEquals(oneCase.message, oneCase.nockConfig.response, resultContent);
-				rimraf.sync(oneCase.targetFileLocation);
-			} else {
-				jqUnit.assertFalse("The target file does not exist", fs.existsSync(oneCase.targetFileLocation));
-			}
+		return utils.downloadDataFile(fullSitePath).then(function (res) {
 			if (oneCase.response.isError) {
 				jqUnit.assertEquals("The value of isError is expected", oneCase.response.isError, res.isError);
 			} else {

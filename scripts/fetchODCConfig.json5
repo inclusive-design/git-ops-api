@@ -1,6 +1,21 @@
-// Contains all configs used by scripts/fetchODCDataFiles.js for updating newly published ODC data files of
+// Contains all configs used by scripts/fetchODCDataFiles.js for committing newly published ODC data files of
 // COVID-19 assessment centre locations into WeCount Github repository.
 {
+	// Github REST API
+	githubRestAPI: "https://api.github.com/",
+
+	// Github GraphQL API
+	githubGraphqlAPI: "https://api.github.com/graphql",
+
+	// Github repository owner
+	repoOwner: "inclusive-design",
+
+	// Github repository name
+	repoName: "covid-assessment-centres",
+
+	// Github repository name
+	branchName: "main",
+
 	// The ODC API that returns a JSON feed referring to a downloadable URL of the CSV version of COVID-19 assessment
 	// centre locataions.
 	dataSourceUrl: "https://data.ontario.ca/api/3/action/package_show?id=covid-19-assessment-centre-locations",
@@ -9,18 +24,6 @@
 	// This directory is relative to the root directory of the repository.
 	dataDirInRepo: "ODC",
 
-	// The central COVID-19 data repository on Github
-	covidDataRepoUrl: "https://github.com/inclusive-design/covid-assessment-centres.git",
-
-	// Github REST API
-	githubRestAPI: "https://api.github.com/",
-
-	// Github GraphQL API
-	githubGraphqlAPI: "https://api.github.com/graphql",
-
 	// The template of latest.json in the COVID-19 data repository. All template variables have a prefix of `$`
-	latestFileTemplate: "{\n\t\"fileName\": \"$filename\"\n}\n",
-
-	// The template of the branch name that the pull request is issued from.  All template variables have a prefix of `$`
-	branchNameTemplate: "ODC-new-data-file-$timestamp"
+	latestFileTemplate: "{\n\t\"fileName\": \"$filename\"\n}\n"
 }

@@ -10,10 +10,7 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 
 "use strict";
 
-const fs = require("fs");
 const axios = require("axios");
-const rimraf = require("rimraf");
-const git = require("simple-git")();
 
 module.exports = {
 	/**
@@ -91,7 +88,7 @@ module.exports = {
 	 * @return {String|Object} return the file content when the operation completes successfully. When an error occurs,
 	 * return the error object in a structure of: {isError: true, message: detailed-error-message}
 	 */
-	downloadDataFile: async (downloadURL, targetFileLocation) => {
+	downloadDataFile: async (downloadURL) => {
 		try {
 			let res = await axios.get(downloadURL);
 			return res.data;
