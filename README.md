@@ -34,3 +34,19 @@ explained in the config file.
 
 * How to run:
 `node scripts/fetchODCDataFiles.js`
+
+## Git operation API
+
+* Script: scripts/gitOpsApi.js
+
+Includes API for operating remote Github branches and files. All API functions return a promise. Refer to the JSDoc
+in the script for the detail of parameters.
+
+* getBranchRef(octokit, options)
+* getAllBranches(octokit, options)
+* createBranch(octokit, options)
+* fetchRemoteFile(octokit, options)
+* createSingleFile(octokit, options)
+* updateSingleFile(octokit, options)
+* commitMultipleFiles(octokit, options)
+* issuePullRequest(octokit, options)

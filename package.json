@@ -2,6 +2,7 @@
 	"name": "data-update-github",
 	"version": "0.1.0",
 	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
+	"main": "index.js",
 	"scripts": {
 		"lint": "grunt lint",
 		"test": "node tests/all-tests.js"
