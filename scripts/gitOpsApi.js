@@ -11,43 +11,7 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 "use strict";
 
 module.exports = {
-	/**
-	 * An object that contains required information for retrieving a branch reference.
-	 * @typedef {Object} GetBranchRefOptions
-	 * @param {String} repoOwner - The repo owner.
-	 * @param {String} repoName - The repo name.
-	 * @param {String} branchName - The branch name.
-	 */
-
-	/**
-	 * Returns the reference of a branch.
-	 * @param {Object} octokit - An instance of octokit with authentication being set.
-	 * @param {GetBranchRefOptions} options - Required parameters for this github operation.
-	 * @return {Promise} When the operation completes successfully, the resolved value is an array of objects.
-	 * Each object contains the information of a branch in a structure of:
-	 * {name: {String}, commit}
-	 * When the operation fails, the promise rejects with an object in a structure of
-	 * {isError: true, message: [error-message]};
-	 */
-	getBranchRef: async function (octokit, options) {
-		return new Promise((resolve, reject) => {
-			return octokit.request("GET /repos/{owner}/{repo}/git/ref/{ref}", {
-				headers: {
-					"Cache-Control": "no-store, max-age=0"
-				},
-				owner: options.repoOwner,
-				repo: options.repoName,
-				ref: "heads/" + options.branchName
-			}).then((res) => {
-				resolve(res.data);
-			}).catch((e) => {
-				reject({
-					isError: true,
-					message: "Error at getBranchRef(): " + e.message
-				});
-			});
-		});
-	},
+	getBranchRef: getBranchRef,
 
 	/**
 	 * An object that contains required information for fetching a file.
@@ -106,7 +70,7 @@ module.exports = {
 	 */
 	createBranch: async (octokit, options) => {
 		return new Promise((resolve, reject) => {
-			return module.exports.getBranchRef(octokit, {
+			return getBranchRef(octokit, {
 				repoOwner: options.repoOwner,
 				repoName: options.repoName,
 				branchName: options.baseBranchName
@@ -462,3 +426,41 @@ module.exports = {
 		});
 	}
 };
+
+/**
+ * An object that contains required information for retrieving a branch reference.
+ * @typedef {Object} GetBranchRefOptions
+ * @param {String} repoOwner - The repo owner.
+ * @param {String} repoName - The repo name.
+ * @param {String} branchName - The branch name.
+ */
+
+/**
+ * Returns the reference of a branch.
+ * @param {Object} octokit - An instance of octokit with authentication being set.
+ * @param {GetBranchRefOptions} options - Required parameters for this github operation.
+ * @return {Promise} When the operation completes successfully, the resolved value is an array of objects.
+ * Each object contains the information of a branch in a structure of:
+ * {name: {String}, commit}
+ * When the operation fails, the promise rejects with an object in a structure of
+ * {isError: true, message: [error-message]};
+ */
+async function getBranchRef(octokit, options) {
+	return new Promise((resolve, reject) => {
+		return octokit.request("GET /repos/{owner}/{repo}/git/ref/{ref}", {
+			headers: {
+				"Cache-Control": "no-store, max-age=0"
+			},
+			owner: options.repoOwner,
+			repo: options.repoName,
+			ref: "heads/" + options.branchName
+		}).then((res) => {
+			resolve(res.data);
+		}).catch((e) => {
+			reject({
+				isError: true,
+				message: "Error at getBranchRef(): " + e.message
+			});
+		});
+	});
+}
