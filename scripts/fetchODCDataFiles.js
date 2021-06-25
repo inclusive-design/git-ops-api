@@ -101,7 +101,7 @@ async function main() {
 			repoName: repoName,
 			branchName: branchName,
 			files: files,
-			commitMsg: "feat: commit a new ODC data file published at " + dataSourceUrl
+			commitMessage: "feat: commit a new ODC data file published at " + dataSourceUrl
 		}).then(() => {
 			console.log("Done: the new data file and updated latest.json have been committed.");
 		}).catch((e) => {

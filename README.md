@@ -12,7 +12,23 @@ Run `npm run lint` to lint.
 
 ## Tests
 
-Run `npm run test` to lint.
+Run `npm run test` to run tests.
+
+### A Special Test
+
+Note that tests for Git operation API (`tests/gitOpsApiTests.js`) is not included in `npm run test` command. This test
+requires a personal access token that has the privilege to operate
+[inclusive-design/data-update-github](https://github.com/inclusive-design/data-update-github/).
+This access token can be supplied by defining an environment variable named "ACCESS_TOKEN" or passed as an argument
+when running the script `node tests/gitOpsApiTests.js {access_token}`.
+
+## Define Environment Variables
+
+Create a `.env` at the root directory with a content:
+
+```profile
+ACCESS_TOKEN={String}
+```
 
 ## Scripts
 
@@ -35,7 +51,7 @@ explained in the config file.
 * How to run:
 `node scripts/fetchODCDataFiles.js`
 
-## Git operation API
+## Git Operation API
 
 * Script: scripts/gitOpsApi.js
 
@@ -45,6 +61,7 @@ in the script for the detail of parameters.
 * getBranchRef(octokit, options)
 * getAllBranches(octokit, options)
 * createBranch(octokit, options)
+* deleteBranch(octokit, options)
 * fetchRemoteFile(octokit, options)
 * createSingleFile(octokit, options)
 * updateSingleFile(octokit, options)

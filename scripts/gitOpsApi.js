@@ -135,6 +135,40 @@ module.exports = {
 
 	/**
 	 * An object that contains required information for fetching a file.
+	 * @typedef {Object} DeleteBranchOptions
+	 * @param {String} repoOwner - The repo owner.
+	 * @param {String} repoName - The repo name.
+	 * @param {String} branchName - The name of the base branch to delete.
+	 */
+
+	/**
+	 * Create a new branch based off another branch.
+	 * @param {Object} octokit - An instance of octokit with authentication being set.
+	 * @param {DeleteBranchOptions} options - Required parameters for this github operation.
+	 * @return {Promise} When the operation completes successfully, the resolved value is an object in a structure of:
+	 * {ref: {String}, node_id: {String}, url: {String}, object: {sha: {String}, type: {String}, url: {String}}}
+	 * When the operation fails, the promise rejects with an object in a structure of
+	 * {isError: true, message: [error-message]};
+	 */
+	deleteBranch: async (octokit, options) => {
+		return new Promise((resolve, reject) => {
+			return octokit.request("DELETE /repos/{owner}/{repo}/git/refs/{ref}", {
+				owner: options.repoOwner,
+				repo: options.repoName,
+				ref: "heads/" + options.branchName
+			}).then(() => {
+				resolve(options.branchName + " has been deleted successfully.");
+			}).catch((e) => {
+				reject({
+					isError: true,
+					message: "Error at deleteBranch(): " + e.message
+				});
+			});
+		});
+	},
+
+	/**
+	 * An object that contains required information for fetching a file.
 	 * @typedef {Object} FetchRemoteFileOptions
 	 * @param {String} repoOwner - The repo owner.
 	 * @param {String} repoName - The repo name.
@@ -192,7 +226,7 @@ module.exports = {
 	 * @param {String} branchName - The name of the remote branch to operate.
 	 * @param {String} filePath - The location of the file including the path and the file name.
 	 * @param {String} fileContent - The file content.
-	 * @param {String} commitMsg - The commit message.
+	 * @param {String} commitMessage - The commit message.
 	 */
 
 	/**
@@ -209,7 +243,7 @@ module.exports = {
 	            owner: options.repoOwner,
 	            repo: options.repoName,
 	            path: options.filePath,
-	            message: options.commitMsg,
+	            message: options.commitMessage,
 	            content: Buffer.from(options.fileContent).toString("base64"),
 	            branch: options.branchName
 	        }).then(() => {
@@ -231,7 +265,7 @@ module.exports = {
 	 * @param {String} branchName - The name of the remote branch to operate.
 	 * @param {String} filePath - The location of the file including the path and the file name.
 	 * @param {String} fileContent - The file content.
-	 * @param {String} commitMsg - The commit message.
+	 * @param {String} commitMessage - The commit message.
 	 * @param {String} sha - The sha of the existing file.
 	 */
 
@@ -249,7 +283,7 @@ module.exports = {
 	            owner: options.repoOwner,
 	            repo: options.repoName,
 	            path: options.filePath,
-	            message: options.commitMsg,
+	            message: options.commitMessage,
 	            content: Buffer.from(options.fileContent).toString("base64"),
 	            branch: options.branchName,
 				sha: options.sha
@@ -268,13 +302,14 @@ module.exports = {
 	 * An object that contains required information for submitting multiple files in one commit.
 	 * Note that when creating or updating a single file, API functions createSingleFile() and updateSingleFile()
 	 * are recommended for better performance.
+	 * Reference: https://gist.github.com/StephanHoyer/91d8175507fcae8fb31a
 	 * @typedef {Object} CommitMultipleFilesOptions
 	 * @param {String} repoOwner - The repo owner.
 	 * @param {String} repoName - The repo name.
 	 * @param {String} branchName - The name of the remote branch to operate.
 	 * @param {Object[]} files - An array of objects. Each object contains a file information in a structure of
 	 * [{path: {String}, content: {String}}, ...].
-	 * @param {String} commitMsg - The commit message.
+	 * @param {String} commitMessage - The commit message.
 	 */
 
 	 /**
@@ -289,7 +324,7 @@ module.exports = {
 		const repoName = options.repoName;
 		const branchName = options.branchName;
 		const files = options.files;
-		const commitMsg = options.commitMsg;
+		const commitMessage = options.commitMessage;
 
 		/**
 		 * Returns a single tree using the SHA1 value for that tree.
@@ -340,7 +375,7 @@ module.exports = {
 				return octokit.request("POST /repos/{owner}/{repo}/git/commits", {
 					owner: repoOwner,
 					repo: repoName,
-					message: commitMsg,
+					message: commitMessage,
 					tree: tree.data.sha,
 					parents: [parentCommit.object.sha]
 				});
@@ -374,7 +409,7 @@ module.exports = {
 	 * @param {String} repoName - The repo name.
 	 * @param {String} issuerGithubId - The Github id of the issuer.
 	 * @param {String} branchName - The name of the remote branch to operate.
-	 * @param {String} prTitle - The pull request title.
+	 * @param {String} pullRequestTitle - The pull request title.
 	 */
 
 	/**
@@ -403,7 +438,7 @@ module.exports = {
 								baseRefName: "main",
 								headRefName: "${options.issuerGithubId}:${options.branchName}",
 								repositoryId: "${repoId}",
-								title: "${options.prTitle}"
+								title: "${options.pullRequestTitle}"
 							}) {
 							pullRequest {
 							  url
