@@ -43,6 +43,3 @@ jobs:
 
     - name: Run tests
       run: npm test
-
-    - name: Run git operation API tests
-      run: node --trace-warnings ./tests/gitOpsApiTests.js ${{ secrets.GITHUB_TOKEN }}
