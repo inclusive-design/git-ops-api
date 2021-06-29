@@ -14,7 +14,7 @@ Run `npm run lint` to lint.
 
 Run `npm run test` to run tests.
 
-### A Special Test
+### Git operation API Tests
 
 Note that tests for Git operation API (`tests/gitOpsApiTests.js`) is not included in `npm run test` command. This test
 requires a personal access token that has the privilege to operate

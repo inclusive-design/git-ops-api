@@ -1,0 +1,9 @@
+{
+	"lintspaces": {
+		"jsonindentation": {
+			"options": {
+				"indentation": "tabs"
+			}
+		}
+	}
+}
