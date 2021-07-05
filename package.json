@@ -2,7 +2,7 @@
 	"name": "data-update-github",
 	"version": "0.1.0",
 	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
-	"main": "index.js",
+	"main": "./scripts/gitOpsApi.js",
 	"scripts": {
 		"lint": "fluid-lint-all",
 		"test": "node tests/all-tests.js"
@@ -18,8 +18,8 @@
 		"dotenv": "10.0.0",
 		"eslint-config-fluid": "2.0.0",
 		"fluid-lint-all": "1.1.4",
-		"infusion": "3.0.0-dev.20201113T153152Z.32176dcbe.FLUID-6145",
-		"nock": "13.1.0",
-		"node-jqunit": "1.1.9"
+		"infusion": "4.0.0-dev.20210622T193827Z.ac6adb829.FLUID-6629",
+		"node-jqunit": "1.1.9",
+		"nock": "13.1.1"
 	}
 }

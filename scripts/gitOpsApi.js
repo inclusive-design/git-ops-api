@@ -266,7 +266,6 @@ module.exports = {
 	 * An object that contains required information for submitting multiple files in one commit.
 	 * Note that when creating or updating a single file, API functions createSingleFile() and updateSingleFile()
 	 * are recommended for better performance.
-	 * Reference: https://gist.github.com/StephanHoyer/91d8175507fcae8fb31a
 	 * @typedef {Object} CommitMultipleFilesOptions
 	 * @param {String} repoOwner - The repo owner.
 	 * @param {String} repoName - The repo name.
@@ -312,6 +311,8 @@ module.exports = {
 			});
 		};
 
+		// This sequence for submitting multiple files in one commit is referenced from
+		// https://gist.github.com/StephanHoyer/91d8175507fcae8fb31a
 		return new Promise((resolve, reject) => {
 			return Promise.all(files.map((file) => {
 				return octokit.request("POST /repos/{owner}/{repo}/git/blobs", {
