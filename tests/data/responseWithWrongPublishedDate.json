@@ -1,0 +1,244 @@
+{
+	"help": "https://data.ontario.ca/api/3/action/help_show?name=package_show",
+	"success": true,
+	"result": {
+		"notes_translated": {
+			"fr": "Obtenez une liste des centres d\u2019\u00e9valuation de la COVID-19.\r\n\r\nAvant de vous pr\u00e9senter \u00e0 un centre, vous devriez v\u00e9rifier si \u202f:\r\n\r\n * le centre est ouvert\r\n * le centre offre un service de d\u00e9pistage \u00e0 l\u2019auto ou sans rendez-vous\r\n * le centre proc\u00e8de au d\u00e9pistage chez les jeunes enfants ou les b\u00e9b\u00e9s\r\n * vous devez prendre rendez-vous\r\n * vous devez parler \u00e0 un membre du personnel \u00e0 propos de votre \u00e9tat (pr\u00e9filtrage)\r\n\r\nTous les centres d\u2019\u00e9valuation vous feront subir un test si vous le souhaitez.\r\n\r\nT\u00e9l\u00e9phonez au centre d\u2019\u00e9valuation ou au bureau de sant\u00e9 publique de votre r\u00e9gion\u202fsi vous avez des questions.\u202f\r\n\r\nVous\u202f**n\u2019avez pas**\u202fbesoin d\u2019une carte Sant\u00e9 (Assurance-sant\u00e9 de l'Ontario) pour subir le test. Il s\u2019agit d\u2019un service gratuit.\u202f\r\n\r\nLes donn\u00e9es incluent (si accessibles) :\r\n\r\n * Nom de l\u2019emplacement \r\n * Exploitant de l\u2019emplacement\r\n * Adresse physique\r\n * Num\u00e9ro de t\u00e9l\u00e9phone\r\n * Site Web \r\n * Bureau de sant\u00e9 publique (BSP)\r\n * Latitude \r\n * Longitude\r\n * Adresse physique\r\n * Num\u00e9ro de t\u00e9l\u00e9phone\r\n * Heures d'ouverture\r\n * Restrictions li\u00e9es \u00e0 l\u2019\u00e2ge\r\n * Rendez-vous n\u00e9cessaire \r\n * Offre d\u2019un service \u00e0 l\u2019auto \r\n * Offre d\u2019un service sans rendez-vous \r\n * Fermeture temporaire\r\n * Centre actif (fermetures ind\u00e9termin\u00e9es)",
+			"en": "Get a list of COVID-19 assessment centres. Before you go, you should check if: \r\n\r\n* The centre is open\r\n* They have drive-through or walk-in testing\r\n* They will test small children or babies\r\n* You need to make an appointment\r\n* You need to speak to a staff member about your condition (prescreening)\r\n\r\nAll assessment centres will test you if you would like to be tested. \r\n\r\nCall the assessment centre or your local public health unit if you have questions.\r\n\r\nYou **do not** need a health (OHIP) card for a test. It is a free service.\r\n\r\nData includes (where available):\r\n\r\n* Location name \r\n* Location operator\r\n* Physical address\r\n* Phone number\r\n* Website \r\n* Public Health Unit (PHU)\r\n* Latitude \r\n* Longitude\r\n* Physical address\r\n* Phone number\r\n* Hours of operation\r\n* Age restrictions\r\n* Appointment requested \r\n* Drive through availability \r\n* Walk in availability \r\n* Temporary closure\r\n* Active centre (indefinite closures) "
+		},
+		"license_title": "Open Government Licence \u2013 Ontario",
+		"maintainer": null,
+		"relationships_as_object": [],
+		"maintainer_translated": {
+			"fr": "",
+			"en": ""
+		},
+		"maintainer_email": "",
+		"num_tags": 10,
+		"maintainer_branch": {
+			"fr": "Ontario Digital Service",
+			"en": "Ontario Digital Service"
+		},
+		"keywords": {
+			"fr": ["Gouvernement et finances", "Sant\u00e9", "covid", "d\u00e9pistage de la COVID-19", "COVID-19"],
+			"en": ["Government and Finance", "Health", "coronavirus", "covid", "testing", "covid-19 testing locations", "COVID-19"]
+		},
+		"id": "8ba078b2-ca9b-44c1-b5db-9674d85421f9",
+		"metadata_created": "2020-05-29T19:16:39.323131",
+		"title_translated": {
+			"fr": "Emplacements des centres de d\u00e9pistage de la COVID-19",
+			"en": "COVID-19 testing locations"
+		},
+		"metadata_modified": "2020-11-24T14:59:03.647328",
+		"author": "",
+		"author_email": "",
+		"geographic_granularity": "",
+		"asset_type": "dataset",
+		"access_level": "open",
+		"state": "active",
+		"version": null,
+		"exemption_rationale": {
+			"fr": "",
+			"en": ""
+		},
+		"license_id": "OGL-ON-1.0",
+		"type": "dataset",
+		"resources": [{
+			"cache_last_updated": null,
+			"package_id": "8ba078b2-ca9b-44c1-b5db-9674d85421f9",
+			"contains_geographic_markers": false,
+			"datastore_active": false,
+			"id": "1b073d1d-f832-4015-8bc0-d3381e84a465",
+			"size": 206939,
+			"state": "active",
+			"version": "",
+			"type": "data",
+			"hash": "",
+			"description": "",
+			"format": "JSON",
+			"description_translated": {
+				"fr": "",
+				"en": ""
+			},
+			"mimetype_inner": null,
+			"url_type": "",
+			"mimetype": "application/json",
+			"cache_url": null,
+			"name": "COVID-19 assessment centre locations",
+			"language": "english_and_french",
+			"created": "2020-05-29T19:18:03.047875",
+			"url": "https://covid-19.ontario.ca/covid-19-ac-assets/data/locations.json",
+			"data_last_updated": "2020-11-24",
+			"last_modified": "2020-08-20T16:37:32.191087",
+			"position": 0,
+			"revision_id": "a76249fd-7f15-463f-9bac-6e333b6f4768",
+			"resource_type": null
+		}, {
+			"cache_last_updated": null,
+			"package_id": "8ba078b2-ca9b-44c1-b5db-9674d85421f9",
+			"contains_geographic_markers": false,
+			"datastore_active": true,
+			"id": "c60993bb-3988-4648-9be9-398dee480514",
+			"size": 200091,
+			"state": "active",
+			"version": "",
+			"type": "data",
+			"hash": "",
+			"description": "",
+			"format": "CSV",
+			"description_translated": {
+				"fr": "",
+				"en": ""
+			},
+			"mimetype_inner": null,
+			"url_type": "upload",
+			"mimetype": "text/csv",
+			"cache_url": null,
+			"name": "COVID-19 assessment centre locations",
+			"language": "english_and_french",
+			"created": "2020-11-19T18:49:32.800923",
+			"url": "https://data.ontario.ca/dataset/8ba078b2-ca9b-44c1-b5db-9674d85421f9/resource/c60993bb-3988-4648-9be9-398dee480514/download/assessment_centre_locations.csv",
+			"data_last_updated": "Nov 24, 2020",
+			"last_modified": "2020-11-24T14:58:30.194818",
+			"position": 1,
+			"revision_id": "26b545e4-9816-4233-ad5e-446744f0ab71",
+			"resource_type": null
+		}, {
+			"cache_last_updated": null,
+			"package_id": "8ba078b2-ca9b-44c1-b5db-9674d85421f9",
+			"contains_geographic_markers": false,
+			"datastore_active": false,
+			"id": "f4aba44a-a90f-446d-9852-f12cb2d2e0b6",
+			"size": 788814,
+			"state": "active",
+			"version": "",
+			"type": "data",
+			"hash": "",
+			"description": "",
+			"format": "",
+			"description_translated": {
+				"fr": "",
+				"en": ""
+			},
+			"mimetype_inner": null,
+			"url_type": "upload",
+			"mimetype": null,
+			"cache_url": null,
+			"name": "COVID-19 assessment centre locations",
+			"language": "english_and_french",
+			"created": "2020-11-19T18:50:35.605971",
+			"url": "https://data.ontario.ca/dataset/8ba078b2-ca9b-44c1-b5db-9674d85421f9/resource/f4aba44a-a90f-446d-9852-f12cb2d2e0b6/download/assessment_centre_locations.geojson",
+			"data_last_updated": "2020-11-24",
+			"last_modified": "2020-11-24T14:59:03.628956",
+			"position": 2,
+			"revision_id": "94961c06-8e3f-4f85-bb1c-c647e12f1d81",
+			"resource_type": null
+		}],
+		"geographic_coverage_translated": {
+			"fr": "Ontario",
+			"en": "Ontario"
+		},
+		"num_resources": 3,
+		"tags": [{
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "COVID-19",
+			"id": "fbd58013-0821-462d-b76c-d09cd05bc9cb",
+			"name": "COVID-19"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "Gouvernement et finances",
+			"id": "9d21c00e-60e9-4c53-8284-6fe8e6c430d8",
+			"name": "Gouvernement et finances"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "Government and Finance",
+			"id": "6a2925b2-818e-4be1-ac6a-4fee077600b7",
+			"name": "Government and Finance"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "Health",
+			"id": "0a6718c8-3338-418f-ab6f-894043c2d53d",
+			"name": "Health"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "Sant\u00e9",
+			"id": "bd5585cf-bccc-4d3e-9299-d7130f543e10",
+			"name": "Sant\u00e9"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "coronavirus",
+			"id": "303aab27-6a61-434a-95ac-48e13de756c4",
+			"name": "coronavirus"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "covid",
+			"id": "82c8192f-73c3-45b5-bc49-79bd03f27ec3",
+			"name": "covid"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "covid-19 testing locations",
+			"id": "63f0b553-6b2e-4ec9-9ba0-34f7f764f7e7",
+			"name": "covid-19 testing locations"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "d\u00e9pistage de la COVID-19",
+			"id": "3908f8f3-77e6-4408-a2ed-f6e47b240e44",
+			"name": "d\u00e9pistage de la COVID-19"
+		}, {
+			"vocabulary_id": null,
+			"state": "active",
+			"display_name": "testing",
+			"id": "0ea5d264-52a4-44af-9f0d-698d91e9cb48",
+			"name": "testing"
+		}],
+		"title": "COVID-19 testing locations",
+		"current_as_of": "2020-11-24",
+		"private": false,
+		"groups": [{
+			"display_name": "2019 Novel Coronavirus",
+			"description": "",
+			"image_display_url": "",
+			"title": "2019 Novel Coronavirus",
+			"id": "7ce49c3c-f796-448b-927a-3a35e7cdddb9",
+			"name": "2019-novel-coronavirus"
+		}],
+		"creator_user_id": "1f44ed22-9e4a-488e-9c12-711d0ad9d1f5",
+		"relationships_as_subject": [],
+		"access_instructions": {
+			"fr": "",
+			"en": ""
+		},
+		"organization": {
+			"description": "",
+			"created": "2019-12-31T08:55:01.998707",
+			"title": "Treasury Board Secretariat",
+			"name": "treasury-board-secretariat",
+			"is_organization": true,
+			"state": "active",
+			"image_url": "2020-03-19-204843.643044treasuryboard.jpg",
+			"revision_id": "0732bb9b-e661-4e2e-8ae6-4d72c90b24a2",
+			"type": "organization",
+			"id": "522adad4-ef09-4c52-b1f2-94f2e17322e5",
+			"approval_status": "approved"
+		},
+		"exemption": "none",
+		"name": "covid-19-assessment-centre-locations",
+		"isopen": false,
+		"url": "https://covid-19.ontario.ca/assessment-centre-locations/",
+		"opened_date": "2020-05-29",
+		"notes": "Get a list of COVID-19 assessment centres. Before you go, you should check if: \r\n\r\n* The centre is open\r\n* They have drive-through or walk-in testing\r\n* They will test small children or babies\r\n* You need to make an appointment\r\n* You need to speak to a staff member about your condition (prescreening)\r\n\r\nAll assessment centres will test you if you would like to be tested. \r\n\r\nCall the assessment centre or your local public health unit if you have questions.\r\n\r\nYou **do not** need a health (OHIP) card for a test. It is a free service.\r\n\r\nData includes (where available):\r\n\r\n* Location name \r\n* Location operator\r\n* Physical address\r\n* Phone number\r\n* Website \r\n* Public Health Unit (PHU)\r\n* Latitude \r\n* Longitude\r\n* Physical address\r\n* Phone number\r\n* Hours of operation\r\n* Age restrictions\r\n* Appointment requested \r\n* Drive through availability \r\n* Walk in availability \r\n* Temporary closure\r\n* Active centre (indefinite closures) ",
+		"owner_org": "522adad4-ef09-4c52-b1f2-94f2e17322e5",
+		"license_url": "https://www.ontario.ca/page/open-government-licence-ontario",
+		"update_frequency": "as_required",
+		"revision_id": "8252b6f3-f917-430b-b706-a48261bd4e93"
+	}
+}

@@ -7,49 +7,45 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 */
 
 // This script checks if a new data file is published on the data source URL. If there is,
-// the script downloads the file, updates the corresponding latest.json and issues a pull request
-// against [the COVID data repository](https://github.com/inclusive-design/covid-assessment-centres/).
+// the script downloads the file, updates the corresponding latest.json and commits them into
+// [the COVID data repository](https://github.com/inclusive-design/covid-assessment-centres/).
 //
 // Prerequisites:
-// Before running this script, an environment variable GITHUB_ACCOUNT_URL must be defined . This variable defines
-// the Github repository URL with an embedded authenticated github account that pull requests will be issued on behalf.
-// An example: https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git
+// Before running this script, these environment variables need to be defined.
+// ACCESS_TOKEN: The personal access token of a Github account that commits will be issued on behalf.
 //
 // A sample command that runs this script in the universal root directory:
-// node scripts/fetchODCDataFiles.js https://data.ontario.ca/dataset/covid-19-assessment-centre-locations ODC
+// node scripts/fetchODCDataFiles.js
 
 "use strict";
 
-const fs = require("fs");
-const rimraf = require("rimraf");
+require("dotenv").config();
+
+const gitOpsApi = require("./gitOpsApi.js");
 const utils = require("./fetchODCDataFilesUtils.js");
 require("json5/lib/register");
 
-const wecountprojectRepoUrl = process.env.GITHUB_ACCOUNT_URL;
-
-if (!wecountprojectRepoUrl) {
-	console.log("Error: Please define an environment variable \"GITHUB_ACCOUNT_URL\" with a value of an authenticated Github account URL that will be used to create remote branches on behalf of this account.\n");
-	console.log("The command to define an temporary environment variable in a terminal: export GITHUB_ACCOUNT_URL={value}\n");
-	console.log("An example of the environment variable value: https://{username}:{personal-access-token}@github.com/wecountproject/covid-assessment-centres.git");
+if (!process.env.ACCESS_TOKEN) {
+	console.log("Error: Please define the environment variable ACCESS_TOKEN.");
 	process.exit(1);
 }
 
+const {
+	Octokit
+} = require("@octokit/core");
+
+const octokit = new Octokit({
+	auth: process.env.ACCESS_TOKEN
+});
+
 const config = require("./fetchODCConfig.json5");
 
+const repoOwner = config.repoOwner;
+const repoName = config.repoName;
+const branchName = config.branchName;
 const dataSourceUrl = config.dataSourceUrl;
 const dataDirInRepo = config.dataDirInRepo;
-const covidDataRepoUrl = config.covidDataRepoUrl;
-const githubAPI = config.githubAPI;
 const latestFileTemplate = config.latestFileTemplate;
-const branchNameTemplate = config.branchNameTemplate;
-
-// The name of the temporary local directory for cloning the covid data repo locally
-const clonedLocalDir = "covid-data-repo";
-
-// Use regex to parse out the personal access token and the repo name embedded in the `wecountprojectRepoUrl`
-const re = /https:.*:(.*)@.*/;
-const matches = re.exec(wecountprojectRepoUrl);
-const accessToken = matches[1];
 
 // The main function
 async function main() {
@@ -68,40 +64,50 @@ async function main() {
 
 	// Clone the COVID data repo to local directory to check if the data file on the ODC website is new
 	console.log("Checking if a new data file is published on the ODC website: " + dataSourceUrl + "...");
-	await utils.prepareLocalRepo(covidDataRepoUrl, clonedLocalDir, wecountprojectRepoUrl);
+	const checkFileExists = await gitOpsApi.fetchRemoteFile(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoName,
+		branchName: branchName,
+		filePath: dataDirInRepo + "/" + dataFileName
+	});
 
-	const dataFileDir = "./" + clonedLocalDir + "/" + dataDirInRepo + "/";
-	if (utils.fileNotExists(dataFileName, dataFileDir)) {
+	if (checkFileExists.isError) {
+		console.log("Error at fetching data file " + dataDirInRepo + "/" + dataFileName + " from https://github.com/" + repoOwner + "/" + repoName + "/tree/main/: " + checkFileExists.message);
+		process.exit(1);
+	} else if (checkFileExists.exists) {
+		console.log("Done: No new data file");
+	} else {
+		// download the file and save to the Github repository
 		console.log("Downloading the new data file...");
-		const downloadStatus = await utils.downloadDataFile(downloadUrl, dataFileDir + dataFileName);
+		const newDataFileContent = await utils.downloadDataFile(downloadUrl);
 
-		if (downloadStatus.isError) {
-			console.log("Error at downloading the file from " + downloadUrl + ": " + downloadStatus.message);
-			rimraf.sync(clonedLocalDir);
-			process.exit(1);
-		}
-
-		console.log("Updating latest.json with the new data file name...");
-		fs.writeFileSync(dataFileDir + "latest.json", latestFileTemplate.replace("$filename", dataFileName), "utf8");
-
-		const branchName = branchNameTemplate.replace("$timestamp", publishedDate);
-		console.log("Pushing updated files to a remote branch named \"" + branchName + "\"...");
-		await utils.createRemoteBranch(branchName, publishedDate, clonedLocalDir);
-
-		console.log("Removing the local temporary directory...");
-		rimraf.sync(clonedLocalDir);
-
-		console.log("Issuing a pull request based off the remote branch...");
-		const pr = await utils.issuePullRequest(githubAPI, covidDataRepoUrl, accessToken, branchName, publishedDate);
-		if (pr.isError) {
-			console.log("Error at issuing pull request: " + pr.message);
+		if (newDataFileContent.isError) {
+			console.log("Error at downloading the file from " + downloadUrl + ": " + newDataFileContent.message);
 			process.exit(1);
 		} else {
-			console.log("Done: A pull request with the new ODC data file has been issued at " + pr);
+			console.log(dataFileName + " is downloaded.");
 		}
-	} else {
-		rimraf.sync(clonedLocalDir);
-		console.log("Done: No new data file");
+
+		const files = [{
+			path: dataDirInRepo + "/" + dataFileName,
+			content: newDataFileContent
+		}, {
+			path: dataDirInRepo + "/latest.json",
+			content: latestFileTemplate.replace("$filename", dataFileName)
+		}];
+
+		gitOpsApi.commitMultipleFiles(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			files: files,
+			commitMessage: "feat: commit a new ODC data file published at " + dataSourceUrl
+		}).then(() => {
+			console.log("Done: the new data file and updated latest.json have been committed.");
+		}).catch((e) => {
+			console.log("Error at committing the new data file and updated latest.json: ", e.message);
+			process.exit(1);
+		});
 	}
 };
 
