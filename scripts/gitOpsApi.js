@@ -133,7 +133,7 @@ module.exports = {
 
 	/**
 	 * An object that contains required information for fetching a file.
-	 * @typedef {Object} FetchRemoteFileOptions
+	 * @typedef {Object} FileOptions
 	 * @param {String} repoOwner - The repo owner.
 	 * @param {String} repoName - The repo name.
 	 * @param {String} branchName - The name of the remote branch to operate.
@@ -143,7 +143,7 @@ module.exports = {
 	/**
 	 * Fetch the content of a file from a remote branch.
 	 * @param {Object} octokit - An instance of octokit with authentication being set.
-	 * @param {FetchRemoteFileOptions} options - Required parameters for this github operation.
+	 * @param {FileOptions} options - Required parameters for this github operation.
 	 * @return {Promise} Three return actions in different cases:
 	 * 1. When the file exists, the resolved value returns an object in a structure of
 	 * {exists: true, content: [fileContent], sha: [sha-of-the-file]};
@@ -178,6 +178,46 @@ module.exports = {
 						message: "Error at fetchRemoteFile(): " + e.message
 					});
 				}
+			});
+		});
+	},
+
+	/**
+	 * Find the information of the last commit of a file.
+	 * @param {Object} octokit - An instance of octokit with authentication being set.
+	 * @param {FileOptions} options - Required parameters for this github operation.
+	 * @return {Promise} When the operation completes successfully, the resolved value is an object in a structure of:
+	 * {
+	 *	author: {name: {String}, email: {String}, date: {String}},
+	 *	committer: {name: {String}, email: {String}, date: {String}},
+	 *	message: {String},
+	 *	tree: {sha: {String}, url: {String}},
+	 *	url: {String},
+	 *	comment_count: {Number},
+  	 *	verification: {verified: {Boolean}, reason: {String}, signature: {String}, payload: {String}}
+ 	 * }
+	 * When the operation fails, the promise rejects with an object in a structure of
+	 * {isError: true, message: [error-message]};
+	 */
+	getFileLastCommit: async (octokit, options) => {
+		return new Promise((resolve, reject) => {
+			octokit.request("GET /repos/{owner}/{repo}/commits", {
+				headers: {
+					"Cache-Control": "no-store, max-age=0"
+				},
+				owner: options.repoOwner,
+				repo: options.repoName,
+				path: options.filePath,
+				sha: options.branchName,
+				page: 1,
+				per_page: 1
+			}).then((response) => {
+				resolve(response.data[0].commit);
+			}, (e) => {
+				reject({
+					isError: true,
+					message: "Error at getFileLastCommit(): " + e.message
+				});
 			});
 		});
 	},

@@ -41,7 +41,7 @@ const repoNameWrong = "nonexistent-repo";
 //****************** Success cases ******************
 
 jqUnit.test("Success cases for all API functions - ", function () {
-	jqUnit.expect(8);
+	jqUnit.expect(9);
 
 	return gitOpsApi.createBranch(octokit, {
 		repoOwner: repoOwner,
@@ -73,6 +73,14 @@ jqUnit.test("Success cases for all API functions - ", function () {
 		});
 	}).then(function (res) {
 		jqUnit.assertTrue("createSingleFile() completes successfully.", res.includes("has been created successfully."));
+		return gitOpsApi.getFileLastCommit(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath
+		});
+	}).then(function (res) {
+		jqUnit.assertTrue("getFileLastCommit() completes successfully.", typeof res.author === "object");
 		return gitOpsApi.fetchRemoteFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
@@ -137,6 +145,21 @@ jqUnit.test("Success cases for all API functions - ", function () {
 	});
 });
 
+//****************** Test fetchRemoteFile() - Not found case ******************
+jqUnit.test("Test fetchRemoteFile() - the file does not exist", function () {
+	jqUnit.expect(1);
+	return gitOpsApi.fetchRemoteFile(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoNameWrong,
+		branchName: branchName,
+		filePath: "src/_data/answers.json"
+	}).then(function (response) {
+		jqUnit.assertFalse("File is not found.", response.exists);
+	}).catch(function () {
+		jqUnit.fail("fetchRemoteFile() should not fail.");
+	});
+});
+
 //****************** Failed cases ******************
 
 //****************** Test createBranch() ******************
@@ -190,6 +213,21 @@ jqUnit.test("Failed case for getAllBranches()", function () {
 		repoName: repoNameWrong
 	}).then(function () {
 		jqUnit.fail("getAllBranches() should not complete successfully.");
+	}).catch(function (error) {
+		jqUnit.assertTrue("The value of isError is set to true", error.isError);
+	});
+});
+
+//****************** Test getFileLastCommit() ******************
+jqUnit.test("Failed case for getFileLastCommit()", function () {
+	jqUnit.expect(1);
+	return gitOpsApi.getFileLastCommit(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoNameWrong,
+		branchName: branchName,
+		filePath: "src/_data/answers.json"
+	}).then(function () {
+		jqUnit.fail("getFileLastCommit() should not complete successfully.");
 	}).catch(function (error) {
 		jqUnit.assertTrue("The value of isError is set to true", error.isError);
 	});
