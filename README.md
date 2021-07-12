@@ -15,6 +15,7 @@ in the script for the detail of parameters.
 * createBranch(octokit, options)
 * deleteBranch(octokit, options)
 * fetchRemoteFile(octokit, options)
+* getFileLastCommit(octokit, options)
 * createSingleFile(octokit, options)
 * updateSingleFile(octokit, options)
 * commitMultipleFiles(octokit, options)
