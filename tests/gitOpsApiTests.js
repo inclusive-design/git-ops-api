@@ -40,7 +40,7 @@ const repoNameWrong = "nonexistent-repo";
 
 //****************** Success cases ******************
 
-jqUnit.asyncTest("Success cases for all API functions - ", async function () {
+jqUnit.test("Success cases for all API functions - ", async function () {
 	jqUnit.expect(9);
 	let response;
 
@@ -126,27 +126,26 @@ jqUnit.asyncTest("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("The pull request url is returned", response.startsWith("https://github.com/"));
 
-		response = await gitOpsApi.deleteBranch(octokit, {
+		return gitOpsApi.deleteBranch(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName
+		}).then(function (response) {
+			jqUnit.assertTrue("deleteBranch() completes successfully.", response.includes("has been deleted successfully"));
 		});
-		jqUnit.assertTrue("deleteBranch() completes successfully.", response.includes("has been deleted successfully"));
 	} catch (error) {
-		try {
-			response = await gitOpsApi.deleteBranch(octokit, {
-				repoOwner: repoOwner,
-				repoName: repoName,
-				branchName: branchName
-			});
+		return gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		}).then(function () {
 			console.log("Cleaned up.");
 			jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", error.message);
-		} catch (e) {
+		}).catch(function (e) {
 			console.log("Failed at the clean up with an error: ", e.message);
 			jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", error.message);
-		};
+		});
 	}
-	jqUnit.start();
 });
 
 //****************** Test fetchRemoteFile() - Not found case ******************
