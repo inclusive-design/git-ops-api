@@ -1,8 +1,8 @@
 {
-	"name": "data-update-github",
-	"version": "0.1.0",
+	"name": "git-ops-api",
+	"version": "1.0.0",
 	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
-	"main": "./scripts/gitOpsApi.js",
+	"main": "./lib/gitOpsApi.js",
 	"scripts": {
 		"lint": "fluid-lint-all",
 		"test": "node tests/all-tests.js"

@@ -3,7 +3,7 @@ Copyright 2020 OCAD University
 
 Licensed under the New BSD license. You may not use this file except in compliance with this licence.
 You may obtain a copy of the BSD License at
-https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICENSE
+https://raw.githubusercontent.com/inclusive-design/git-ops-api/main/LICENSE
 */
 
 "use strict";
@@ -13,7 +13,7 @@ const jqUnit = fluid.require("node-jqunit", require, "jqUnit");
 const fs = require("fs");
 const nock = require("nock");
 
-const utils = require("../scripts/fetchODCDataFilesUtils.js");
+const utils = require("../demos/fetchODCDataFilesUtils.js");
 
 jqUnit.module("Fetch ODC data files tests");
 

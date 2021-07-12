@@ -1,4 +1,4 @@
-// Contains all configs used by scripts/fetchODCDataFiles.js for committing newly published ODC data files of
+// Contains all configs used by demos/fetchODCDataFiles.js for committing newly published ODC data files of
 // COVID-19 assessment centre locations into WeCount Github repository.
 {
 	// Github REST API

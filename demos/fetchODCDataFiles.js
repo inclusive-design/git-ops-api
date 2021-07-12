@@ -3,7 +3,7 @@ Copyright 2020 OCAD University
 
 Licensed under the New BSD license. You may not use this file except in compliance with this licence.
 You may obtain a copy of the BSD License at
-https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICENSE
+https://raw.githubusercontent.com/inclusive-design/git-ops-api/main/LICENSE
 */
 
 // This script checks if a new data file is published on the data source URL. If there is,
@@ -15,13 +15,13 @@ https://raw.githubusercontent.com/inclusive-design/data-update-github/main/LICEN
 // ACCESS_TOKEN: The personal access token of a Github account that commits will be issued on behalf.
 //
 // A sample command that runs this script in the universal root directory:
-// node scripts/fetchODCDataFiles.js
+// node demos/fetchODCDataFiles.js
 
 "use strict";
 
 require("dotenv").config();
 
-const gitOpsApi = require("./gitOpsApi.js");
+const gitOpsApi = require("../lib/gitOpsApi.js");
 const utils = require("./fetchODCDataFilesUtils.js");
 require("json5/lib/register");
 
