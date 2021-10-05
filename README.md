@@ -12,6 +12,7 @@ in the script for the detail of parameters.
 
 * getBranchRef(octokit, options)
 * getAllBranches(octokit, options)
+* getDirInfo(octokit, options)
 * createBranch(octokit, options)
 * deleteBranch(octokit, options)
 * fetchRemoteFile(octokit, options)

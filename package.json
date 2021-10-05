@@ -1,7 +1,7 @@
 {
 	"name": "git-ops-api",
 	"version": "1.0.0",
-	"description": "A remote data change triggers the issue of a pull request to a specified Github repo.",
+	"description": "Support GitHub operation API for manipulating branches and files in remote GitHub repositories.",
 	"main": "./lib/gitOpsApi.js",
 	"scripts": {
 		"lint": "fluid-lint-all",

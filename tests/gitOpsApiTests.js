@@ -35,6 +35,7 @@ const repoOwner = "inclusive-design";
 const repoName = "git-ops-api";
 const branchName = "test-gitOpsApi";
 const filePath = branchName + "/answers.json";
+const dirPath = branchName;
 
 const repoNameWrong = "nonexistent-repo";
 
@@ -63,6 +64,14 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		response = await gitOpsApi.getAllBranches(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName
+		});
+		jqUnit.assertTrue("getAllBranches() completes successfully.", Array.isArray(response));
+
+		response = await gitOpsApi.getDirInfo(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			path: dirPath,
+			ref: branchName
 		});
 		jqUnit.assertTrue("getAllBranches() completes successfully.", Array.isArray(response));
 
@@ -216,6 +225,19 @@ jqUnit.test("Failed case for getAllBranches()", function () {
 		repoName: repoNameWrong
 	}).then(function () {
 		jqUnit.fail("getAllBranches() should not complete successfully.");
+	}).catch(function (error) {
+		jqUnit.assertTrue("The value of isError is set to true", error.isError);
+	});
+});
+
+//****************** Test getDirInfo() ******************
+jqUnit.test("Failed case for getDirInfo()", function () {
+	jqUnit.expect(1);
+	return gitOpsApi.getDirInfo(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoNameWrong
+	}).then(function () {
+		jqUnit.fail("getDirInfo() should not complete successfully.");
 	}).catch(function (error) {
 		jqUnit.assertTrue("The value of isError is set to true", error.isError);
 	});
