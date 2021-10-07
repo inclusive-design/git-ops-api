@@ -11,15 +11,15 @@
 	"license": "BSD-3-Clause",
 	"dependencies": {
 		"@octokit/core": "3.5.1",
-		"axios": "0.21.1",
+		"axios": "0.22.0",
 		"json5": "2.2.0"
 	},
 	"devDependencies": {
 		"dotenv": "10.0.0",
 		"eslint-config-fluid": "2.0.0",
-		"fluid-lint-all": "1.1.4",
+		"fluid-lint-all": "1.1.5",
 		"infusion": "4.0.0-dev.20210622T193827Z.ac6adb829.FLUID-6629",
 		"node-jqunit": "1.1.9",
-		"nock": "13.1.1"
+		"nock": "13.1.3"
 	}
 }
