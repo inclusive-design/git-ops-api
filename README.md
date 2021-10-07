@@ -19,6 +19,7 @@ in the script for the detail of parameters.
 * getFileLastCommit(octokit, options)
 * createSingleFile(octokit, options)
 * updateSingleFile(octokit, options)
+* deleteSingleFile(octokit, options)
 * commitMultipleFiles(octokit, options)
 * issuePullRequest(octokit, options)
 
