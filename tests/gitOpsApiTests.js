@@ -122,6 +122,9 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 			}, {
 				path: "src/_data/new.txt",
 				content: "a new file created by commitMultipleFiles()"
+			}, {
+				path: filePath,
+				operation: "delete"
 			}],
 			commitMessage: "A test commit from commitMultipleFiles()"
 		});
@@ -135,6 +138,16 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 			pullRequestTitle: "A test pull request issued by issuePullRequest()"
 		});
 		jqUnit.assertTrue("The pull request url is returned", response.startsWith("https://github.com/"));
+
+		// Create the test file again for testing deleteSingleFile()
+		response = await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
 
 		// Test deleteSingleFile()
 		fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
