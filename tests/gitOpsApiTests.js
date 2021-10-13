@@ -33,16 +33,25 @@ const octokit = new Octokit({
 
 const repoOwner = "inclusive-design";
 const repoName = "git-ops-api";
-const branchName = "test-gitOpsApi";
-const filePath = branchName + "/answers.json";
-const dirPath = branchName;
 
-const repoNameWrong = "nonexistent-repo";
+const cleanup = function (branchName, testError) {
+	return gitOpsApi.deleteBranch(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoName,
+		branchName: branchName
+	}).then(function () {
+		console.log("Cleaned up: removed the branch " + branchName);
+		jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", testError.message);
+	}).catch(function (e) {
+		console.log("Failed at the clean up to remove the branch " + branchName + " with an error: ", e.message);
+		jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", testError.message);
+	});
+};
 
-//****************** Success cases ******************
-
-jqUnit.test("Success cases for all API functions - ", async function () {
-	jqUnit.expect(11);
+// Test createBranch() and deleteBranch()
+jqUnit.test("Test createBranch() and deleteBranch(), success case - ", async function () {
+	jqUnit.expect(2);
+	const branchName = "test-createDeleteBranch";
 	let response;
 
 	try {
@@ -52,22 +61,140 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 			baseBranchName: "main",
 			targetBranchName: branchName
 		});
-		jqUnit.assertEquals("createBranch() completes successfully.", "refs/heads/" + branchName, response.ref);
+		jqUnit.assertEquals("The success case of createBranch() completes successfully.", "refs/heads/" + branchName, response.ref);
 
-		response = await gitOpsApi.getBranchRef(octokit, {
+		response = await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+		jqUnit.assertTrue("The success case of deleteBranch() completes successfully.", response.includes("has been deleted successfully"));
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test createBranch(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+	const branchName = "test-createDeleteBranch";
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of createBranch() completes successfully.", error.isError);
+	};
+});
+
+jqUnit.test("Test deleteBranch(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+	const branchName = "test-createDeleteBranch";
+	try {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: branchName
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of deleteBranch() completes successfully.", error.isError);
+	};
+});
+
+// Test getBranchRef()
+jqUnit.test("Test getBranchRef(), success case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-getBranchRef";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		const response = await gitOpsApi.getBranchRef(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName
 		});
 		jqUnit.assertEquals("getBranchRef() completes successfully.", "refs/heads/" + branchName, response.ref);
 
-		response = await gitOpsApi.getAllBranches(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test getBranchRef(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-getBranchRef";
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.getBranchRef(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: branchName
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of getBranchRef() completes successfully.", error.isError);
+	};
+});
+
+// Test getAllBranches()
+jqUnit.test("Test getAllBranches(), success case - ", async function () {
+	jqUnit.expect(1);
+
+	try {
+		const response = await gitOpsApi.getAllBranches(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName
 		});
 		jqUnit.assertTrue("getAllBranches() completes successfully.", Array.isArray(response));
+	} catch (error) {
+		jqUnit.fail("The test for getAllBranches() failed with error: ", error);
+	}
+});
 
-		response = await gitOpsApi.createSingleFile(octokit, {
+jqUnit.test("Test getAllBranches(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.getAllBranches(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of getAllBranches() completes successfully.", error.isError);
+	};
+});
+
+// Test createSingleFile()
+jqUnit.test("Test createSingleFile(), success case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-createSingleFile";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		const response = await gitOpsApi.createSingleFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -77,7 +204,59 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("createSingleFile() completes successfully.", response.includes("has been created successfully."));
 
-		response = await gitOpsApi.getFileLastCommit(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test createSingleFile(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-createSingleFile";
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: branchName,
+			filePath: "src/_data/answers.json",
+			fileContent: "{\"key\": \"test value\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of createSingleFile() completes successfully.", error.isError);
+	};
+});
+
+// Test getFileLastCommit()
+jqUnit.test("Test getFileLastCommit(), success case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-getFileLastCommit";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const response = await gitOpsApi.getFileLastCommit(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -85,23 +264,176 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("getFileLastCommit() completes successfully.", typeof response.author === "object");
 
-		response = await gitOpsApi.getDirInfo(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test getFileLastCommit(), failed case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-getFileLastCommit";
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.getFileLastCommit(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: branchName,
+			filePath: "src/_data/answers.json"
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of getFileLastCommit() completes successfully.", error.isError);
+	};
+});
+
+// Test fetchRemoteFile()
+jqUnit.test("Test fetchRemoteFile(), success case - ", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-fetchRemoteFile";
+	const filePath = branchName + "/answers.json";
+	const fileContent = "{\"key\": \"from createSingleFile()\"}";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: fileContent,
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const response = await gitOpsApi.fetchRemoteFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath
+		});
+		jqUnit.assertEquals("fetchRemoteFile() completes successfully.", fileContent, response.content);
+
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test fetchRemoteFile(), file not found - ", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	const response = await gitOpsApi.fetchRemoteFile(octokit, {
+		repoOwner: repoOwner,
+		repoName: repoNameWrong,
+		branchName: "main",
+		filePath: "README.md"
+	});
+	jqUnit.assertFalse("The file not found case of fetchRemoteFile() completes successfully.", response.exists);
+});
+
+// Test getDirInfo()
+jqUnit.test("Test getDirInfo() - success case", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-getDirInfo";
+	const fileName = "answers.json";
+	const filePath = branchName + "/" + fileName;
+	const dirPath = branchName;
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const response = await gitOpsApi.getDirInfo(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			path: dirPath,
 			ref: branchName
 		});
-		jqUnit.assertTrue("getDirInfo() completes successfully.", Array.isArray(response));
+		jqUnit.assertEquals("getDirInfo() completes successfully.", fileName, response[0].name);
 
-		// Test updateSingleFile()
-		let fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test getDirInfo() - failed case", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.getDirInfo(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of getDirInfo() completes successfully.", error.isError);
+	};
+});
+
+// Test updateSingleFile()
+jqUnit.test("Test updateSingleFile() - success case", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-updateSingleFile";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
 			filePath: filePath
 		});
 
-		response = await gitOpsApi.updateSingleFile(octokit, {
+		const response = await gitOpsApi.updateSingleFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -112,7 +444,66 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("updateSingleFile() completes successfully.", response.includes("has been updated successfully."));
 
-		response = await gitOpsApi.commitMultipleFiles(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test updateSingleFile() - failed case", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		const fileInfo = gitOpsApi.fetchRemoteFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: "main",
+			filePath: "README.md"
+		});
+
+		await gitOpsApi.updateSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: "main",
+			filePath: "README.md",
+			fileContent: "{\"key\": \"test value\", \"key2\": \"from updateSingleFile()\"}",
+			commitMessage: "A test commit updated by updateSingleFile()",
+			sha: fileInfo.sha
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of updateSingleFile() completes successfully.", error.isError);
+	};
+});
+
+// Test commitMultipleFiles()
+jqUnit.test("Test commitMultipleFiles() - success case", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-commitMultipleFiles";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const response = await gitOpsApi.commitMultipleFiles(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -130,17 +521,54 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("commitMultipleFiles() completes successfully.", response.includes("successfully."));
 
-		response = await gitOpsApi.issuePullRequest(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
-			issuerGithubId: repoOwner,
-			branchName: branchName,
-			pullRequestTitle: "A test pull request issued by issuePullRequest()"
+			branchName: branchName
 		});
-		jqUnit.assertTrue("The pull request url is returned", response.startsWith("https://github.com/"));
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
 
-		// Create the test file again for testing deleteSingleFile()
-		response = await gitOpsApi.createSingleFile(octokit, {
+jqUnit.test("Test commitMultipleFiles() - failed case", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.commitMultipleFiles(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			branchName: "main",
+			files: [{
+				path: "src/_data/answers.json",
+				content: "{\"key\": \"test value\", \"key2\": \"extra value\", \"key3\": \"from commitMultipleFiles()\"}"
+			}, {
+				path: "src/_data/new.txt",
+				content: "a new file created by commitMultipleFiles()"
+			}],
+			commitMessage: "A test commit from commitMultipleFiles()"
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of commitMultipleFiles() completes successfully.", error.isError);
+	};
+});
+
+// Test issuePullRequest()
+jqUnit.test("Test issuePullRequest() - success case", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-issuePullRequest";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -149,15 +577,73 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 			commitMessage: "A test commit created by createSingleFile()"
 		});
 
-		// Test deleteSingleFile()
-		fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
+		const response = await gitOpsApi.issuePullRequest(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			issuerGithubId: repoOwner,
+			branchName: branchName,
+			pullRequestTitle: "A test pull request issued by issuePullRequest()"
+		});
+		jqUnit.assertTrue("The pull request url is returned", response.startsWith("https://github.com/"));
+
+		await gitOpsApi.deleteBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName
+		});
+	} catch (error) {
+		return cleanup(branchName, error);
+	}
+});
+
+jqUnit.test("Test issuePullRequest() - failed case", async function () {
+	jqUnit.expect(1);
+	const repoNameWrong = "nonexistent-repo";
+
+	try {
+		await gitOpsApi.issuePullRequest(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoNameWrong,
+			issuerGithubId: repoOwner,
+			branchName: "main",
+			pullRequestTitle: "A test pull request issued by the API issuePullRequest()"
+		});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of issuePullRequest() completes successfully.", error.isError);
+	};
+});
+
+// Test deleteSingleFile()
+jqUnit.test("Test deleteSingleFile() - success case", async function () {
+	jqUnit.expect(1);
+	const branchName = "test-deleteSingleFile";
+	const filePath = branchName + "/answers.json";
+
+	try {
+		await gitOpsApi.createBranch(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			baseBranchName: "main",
+			targetBranchName: branchName
+		});
+
+		await gitOpsApi.createSingleFile(octokit, {
+			repoOwner: repoOwner,
+			repoName: repoName,
+			branchName: branchName,
+			filePath: filePath,
+			fileContent: "{\"key\": \"from createSingleFile()\"}",
+			commitMessage: "A test commit created by createSingleFile()"
+		});
+
+		const fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
 			filePath: filePath
 		});
 
-		response = await gitOpsApi.deleteSingleFile(octokit, {
+		const response = await gitOpsApi.deleteSingleFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName,
@@ -167,232 +653,37 @@ jqUnit.test("Success cases for all API functions - ", async function () {
 		});
 		jqUnit.assertTrue("deleteSingleFile() completes successfully.", response.includes("has been deleted successfully."));
 
-		return gitOpsApi.deleteBranch(octokit, {
+		await gitOpsApi.deleteBranch(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoName,
 			branchName: branchName
-		}).then(function (response) {
-			jqUnit.assertTrue("deleteBranch() completes successfully.", response.includes("has been deleted successfully"));
 		});
 	} catch (error) {
-		return gitOpsApi.deleteBranch(octokit, {
-			repoOwner: repoOwner,
-			repoName: repoName,
-			branchName: branchName
-		}).then(function () {
-			console.log("Cleaned up.");
-			jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", error.message);
-		}).catch(function (e) {
-			console.log("Failed at the clean up with an error: ", e.message);
-			jqUnit.fail("The test sequence for testing success cases of API fails with this error: ", error.message);
-		});
+		return cleanup(branchName, error);
 	}
 });
 
-//****************** Test fetchRemoteFile() - Not found case ******************
-jqUnit.test("Test fetchRemoteFile() - the file does not exist", function () {
+jqUnit.test("Test deleteSingleFile() - failed case", async function () {
 	jqUnit.expect(1);
-	return gitOpsApi.fetchRemoteFile(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName,
-		filePath: "src/_data/answers.json"
-	}).then(function (response) {
-		jqUnit.assertFalse("File is not found.", response.exists);
-	}).catch(function () {
-		jqUnit.fail("fetchRemoteFile() should not fail.");
-	});
-});
+	const repoNameWrong = "nonexistent-repo";
 
-//****************** Failed cases ******************
-
-//****************** Test createBranch() ******************
-jqUnit.test("Failed case for createBranch()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.createBranch(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		baseBranchName: "main",
-		targetBranchName: branchName
-	}).then(function () {
-		jqUnit.fail("createBranch() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test deleteBranch() ******************
-jqUnit.test("Failed case for deleteBranch()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.deleteBranch(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName
-	}).then(function () {
-		jqUnit.fail("deleteBranch() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test getBranchRef() ******************
-jqUnit.test("Failed case for getBranchRef()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.getBranchRef(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName
-	}).then(function () {
-		jqUnit.fail("getBranchRef() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test getAllBranches() ******************
-jqUnit.test("Failed case for getAllBranches()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.getAllBranches(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong
-	}).then(function () {
-		jqUnit.fail("getAllBranches() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test getDirInfo() ******************
-jqUnit.test("Failed case for getDirInfo()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.getDirInfo(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong
-	}).then(function () {
-		jqUnit.fail("getDirInfo() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test getFileLastCommit() ******************
-jqUnit.test("Failed case for getFileLastCommit()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.getFileLastCommit(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName,
-		filePath: "src/_data/answers.json"
-	}).then(function () {
-		jqUnit.fail("getFileLastCommit() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test createSingleFile() ******************
-jqUnit.test("Failed case for createSingleFile()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.createSingleFile(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName,
-		filePath: "src/_data/answers.json",
-		fileContent: "{\"key\": \"test value\"}",
-		commitMessage: "A test commit created by createSingleFile()"
-	}).then(function () {
-		jqUnit.fail("createSingleFile() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test updateSingleFile() ******************
-jqUnit.test("Failed case for updateSingleFile()", function () {
-	jqUnit.expect(1);
-
-	return gitOpsApi.fetchRemoteFile(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoName,
-		branchName: "main",
-		filePath: "README.md"
-	}).then((fileInfo) => {
-		return gitOpsApi.updateSingleFile(octokit, {
+	try {
+		const fileInfo = await gitOpsApi.fetchRemoteFile(octokit, {
 			repoOwner: repoOwner,
-			repoName: repoNameWrong,
-			branchName: branchName,
-			filePath: "src/_data/answers.json",
-			fileContent: "{\"key\": \"test value\", \"key2\": \"from updateSingleFile()\"}",
-			commitMessage: "A test commit updated by updateSingleFile()",
-			sha: fileInfo.sha
-		}).then(function () {
-			jqUnit.fail("updateSingleFile() should not complete successfully.");
-		}).catch(function (error) {
-			jqUnit.assertTrue("The value of isError is set to true", error.isError);
+			repoName: repoName,
+			branchName: "main",
+			filePath: "README.md"
 		});
-	});
-});
 
-//****************** Test deleteSingleFile() ******************
-jqUnit.test("Failed case for deleteSingleFile()", function () {
-	jqUnit.expect(1);
-
-	return gitOpsApi.fetchRemoteFile(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoName,
-		branchName: "main",
-		filePath: "README.md"
-	}).then((fileInfo) => {
-		return gitOpsApi.deleteSingleFile(octokit, {
+		await gitOpsApi.deleteSingleFile(octokit, {
 			repoOwner: repoOwner,
 			repoName: repoNameWrong,
-			branchName: branchName,
+			branchName: "main",
 			filePath: "src/_data/answers.json",
 			commitMessage: "A test commit by deleteSingleFile()",
 			sha: fileInfo.sha
-		}).then(function () {
-			jqUnit.fail("deleteSingleFile() should not complete successfully.");
-		}).catch(function (error) {
-			jqUnit.assertTrue("The value of isError is set to true", error.isError);
 		});
-	});
-});
-
-//****************** Test commitMultipleFiles() ******************
-jqUnit.test("Failed case for commitMultipleFiles()", function () {
-	jqUnit.expect(1);
-
-	return gitOpsApi.commitMultipleFiles(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		branchName: branchName,
-		files: [{
-			path: "src/_data/answers.json",
-			content: "{\"key\": \"test value\", \"key2\": \"extra value\", \"key3\": \"from commitMultipleFiles()\"}"
-		}, {
-			path: "src/_data/new.txt",
-			content: "a new file created by commitMultipleFiles()"
-		}],
-		commitMessage: "A test commit from commitMultipleFiles()"
-	}).then(() => {
-		jqUnit.fail("commitMultipleFiles() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
-});
-
-//****************** Test issuePullRequest() ******************
-jqUnit.test("Failed case for issuePullRequest()", function () {
-	jqUnit.expect(1);
-	return gitOpsApi.issuePullRequest(octokit, {
-		repoOwner: repoOwner,
-		repoName: repoNameWrong,
-		issuerGithubId: repoOwner,
-		branchName: branchName,
-		pullRequestTitle: "A test pull request issued by the API issuePullRequest()"
-	}).then(function () {
-		jqUnit.fail("issuePullRequest() should not complete successfully.");
-	}).catch(function (error) {
-		jqUnit.assertTrue("The value of isError is set to true", error.isError);
-	});
+	} catch (error) {
+		jqUnit.assertTrue("The failed case of deleteSingleFile() completes successfully.", error.isError);
+	};
 });
