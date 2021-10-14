@@ -1,6 +1,6 @@
 {
 	"name": "git-ops-api",
-	"version": "1.0.0",
+	"version": "1.1.0",
 	"description": "Support GitHub operation API for manipulating branches and files in remote GitHub repositories.",
 	"main": "./lib/gitOpsApi.js",
 	"scripts": {
