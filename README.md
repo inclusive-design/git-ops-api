@@ -12,12 +12,14 @@ in the script for the detail of parameters.
 
 * getBranchRef(octokit, options)
 * getAllBranches(octokit, options)
+* getDirInfo(octokit, options)
 * createBranch(octokit, options)
 * deleteBranch(octokit, options)
 * fetchRemoteFile(octokit, options)
 * getFileLastCommit(octokit, options)
 * createSingleFile(octokit, options)
 * updateSingleFile(octokit, options)
+* deleteSingleFile(octokit, options)
 * commitMultipleFiles(octokit, options)
 * issuePullRequest(octokit, options)
 
